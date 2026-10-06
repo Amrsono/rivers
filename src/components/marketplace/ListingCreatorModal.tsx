@@ -353,8 +353,6 @@ export const ListingCreatorModal: React.FC = () => {
   const [aiLoadingMode, setAiLoadingMode] = useState<AIMode | null>(null);
   const [aiResult, setAiResult] = useState<AIResult | null>(null);
 
-  if (!isListingCreatorOpen) return null;
-
   // ── AI Call ──────────────────────────────────────────────────────────────
   const triggerAI = useCallback(
     async (mode: AIMode) => {
