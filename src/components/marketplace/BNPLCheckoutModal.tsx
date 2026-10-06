@@ -10,16 +10,11 @@ import {
   ShieldCheck,
   Calendar,
   CreditCard,
-  Lock,
-  CheckCircle2,
-  HelpCircle,
-  ArrowRight,
   Wallet,
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 export const BNPLCheckoutModal: React.FC = () => {
-  const { activeBNPLCheckout, closeBNPLCheckout, addNotification, userBalance } =
+  const { activeBNPLCheckout, closeBNPLCheckout, addNotification, userBalance, t } =
     useRiversStore();
 
   const [paymentMethod, setPaymentMethod] = useState<'wallet' | 'card'>('wallet');
@@ -46,10 +41,10 @@ export const BNPLCheckoutModal: React.FC = () => {
   date4.setDate(today.getDate() + 42);
 
   const schedule = [
-    { label: 'Payment 1 (Today)', date: formatShortDate(today), amount: installmentAmount, isToday: true },
-    { label: 'Payment 2', date: formatShortDate(date2), amount: installmentAmount, isToday: false },
-    { label: 'Payment 3', date: formatShortDate(date3), amount: installmentAmount, isToday: false },
-    { label: 'Payment 4', date: formatShortDate(date4), amount: installmentAmount, isToday: false },
+    { label: t('payment1Today'), date: formatShortDate(today), amount: installmentAmount, isToday: true },
+    { label: t('payment2'), date: formatShortDate(date2), amount: installmentAmount, isToday: false },
+    { label: t('payment3'), date: formatShortDate(date3), amount: installmentAmount, isToday: false },
+    { label: t('payment4'), date: formatShortDate(date4), amount: installmentAmount, isToday: false },
   ];
 
   const handleConfirmBNPL = () => {
@@ -57,10 +52,8 @@ export const BNPLCheckoutModal: React.FC = () => {
     setTimeout(() => {
       setIsProcessing(false);
       closeBNPLCheckout();
-      addNotification(
-        'success',
-        `Rivers Flow BNPL activated! Initial payment of $${installmentAmount} processed via Escrow.`
-      );
+      const msg = t('bnplActivatedSuccess', { amount: installmentAmount });
+      addNotification('success', msg);
     }, 1200);
   };
 
@@ -68,8 +61,8 @@ export const BNPLCheckoutModal: React.FC = () => {
     <Modal
       isOpen={!!activeBNPLCheckout}
       onClose={closeBNPLCheckout}
-      title="Rivers Flow Finance Checkout"
-      subtitle="Split your purchase into 4 interest-free installments. Zero hidden fees."
+      title={t('bnplCheckoutTitle')}
+      subtitle={t('bnplCheckoutSubtitle')}
       maxWidth="xl"
     >
       <div className="space-y-6">
@@ -83,18 +76,18 @@ export const BNPLCheckoutModal: React.FC = () => {
           <div className="flex-1">
             <h4 className="text-sm font-bold text-slate-100 line-clamp-1">{item.title}</h4>
             <span className="text-xs font-mono text-slate-400">
-              Total Price: <strong className="text-cyan-400 font-bold">${totalPrice.toLocaleString()} USD</strong>
+              {t('totalPriceLabel')} <strong className="text-cyan-400 font-bold">${totalPrice.toLocaleString()} USD</strong>
             </span>
           </div>
           <Badge variant="neon" size="sm">
-            <Zap className="w-3 h-3 fill-cyan-400" /> 0% Interest
+            <Zap className="w-3 h-3 fill-cyan-400" /> {t('zeroInterestBadge')}
           </Badge>
         </div>
 
         {/* Schedule Timeline Breakdown */}
         <div className="p-5 rounded-2xl bg-gradient-to-br from-cyan-950/40 via-slate-950 to-slate-950 border border-cyan-500/30">
           <h5 className="text-xs font-mono uppercase tracking-wider text-cyan-400 font-semibold mb-4 flex items-center gap-2">
-            <Calendar className="w-4 h-4" /> 4-Payment Schedule Breakdown
+            <Calendar className="w-4 h-4" /> {t('paymentScheduleHeader')}
           </h5>
 
           <div className="space-y-3">
@@ -120,11 +113,11 @@ export const BNPLCheckoutModal: React.FC = () => {
                     <span className="text-[10px] font-mono text-slate-400">{item.date}</span>
                   </div>
                 </div>
-                <div className="text-right">
+                <div className="ltr:text-right rtl:text-left">
                   <span className="text-sm font-mono font-extrabold">${item.amount}</span>
                   {item.isToday && (
                     <span className="block text-[9px] font-mono text-cyan-400 font-bold">
-                      Due Right Now
+                      {t('dueRightNow')}
                     </span>
                   )}
                 </div>
@@ -136,12 +129,12 @@ export const BNPLCheckoutModal: React.FC = () => {
         {/* Payment Source Selection */}
         <div>
           <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-2 font-semibold">
-            Select Payment Method for First Payment (${installmentAmount})
+            {t('selectPaymentSource', { amount: installmentAmount })}
           </label>
           <div className="grid grid-cols-2 gap-3">
             <button
               onClick={() => setPaymentMethod('wallet')}
-              className={`p-3.5 rounded-xl border text-left flex items-center gap-3 transition-all cursor-pointer ${
+              className={`p-3.5 rounded-xl border text-left rtl:text-right flex items-center gap-3 transition-all cursor-pointer ${
                 paymentMethod === 'wallet'
                   ? 'bg-cyan-950/60 border-cyan-400 text-cyan-300 ring-1 ring-cyan-500/30'
                   : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:border-slate-700'
@@ -149,16 +142,16 @@ export const BNPLCheckoutModal: React.FC = () => {
             >
               <Wallet className="w-5 h-5 text-cyan-400 shrink-0" />
               <div>
-                <span className="text-xs font-bold block text-slate-200">Rivers Escrow Wallet</span>
+                <span className="text-xs font-bold block text-slate-200">{t('escrowWalletOption')}</span>
                 <span className="text-[10px] font-mono text-slate-400">
-                  Balance: ${userBalance.toLocaleString()}
+                  {t('walletBalanceLabel', { amount: userBalance.toLocaleString() })}
                 </span>
               </div>
             </button>
 
             <button
               onClick={() => setPaymentMethod('card')}
-              className={`p-3.5 rounded-xl border text-left flex items-center gap-3 transition-all cursor-pointer ${
+              className={`p-3.5 rounded-xl border text-left rtl:text-right flex items-center gap-3 transition-all cursor-pointer ${
                 paymentMethod === 'card'
                   ? 'bg-cyan-950/60 border-cyan-400 text-cyan-300 ring-1 ring-cyan-500/30'
                   : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:border-slate-700'
@@ -166,8 +159,8 @@ export const BNPLCheckoutModal: React.FC = () => {
             >
               <CreditCard className="w-5 h-5 text-cyan-400 shrink-0" />
               <div>
-                <span className="text-xs font-bold block text-slate-200">Saved Visa •••• 4892</span>
-                <span className="text-[10px] font-mono text-slate-400">Instant Auth</span>
+                <span className="text-xs font-bold block text-slate-200">{t('savedCardOption')}</span>
+                <span className="text-[10px] font-mono text-slate-400">{t('instantAuthLabel')}</span>
               </div>
             </button>
           </div>
@@ -176,7 +169,7 @@ export const BNPLCheckoutModal: React.FC = () => {
         {/* Protection Terms */}
         <div className="flex items-center gap-2 p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 text-xs font-mono">
           <ShieldCheck className="w-4 h-4 shrink-0 text-emerald-400" />
-          <span>Buyer Protection Active: Seller receives funds only after delivery confirmation.</span>
+          <span>{t('buyerProtectionActive')}</span>
         </div>
 
         {/* Confirm Button */}
@@ -188,7 +181,7 @@ export const BNPLCheckoutModal: React.FC = () => {
           className="w-full"
           leftIcon={<Zap className="w-4 h-4 fill-slate-950" />}
         >
-          Confirm & Pay ${installmentAmount} First Installment
+          {t('confirmPayFirstInstallment', { amount: installmentAmount })}
         </Button>
       </div>
     </Modal>

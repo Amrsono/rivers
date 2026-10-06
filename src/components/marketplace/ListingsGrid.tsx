@@ -24,6 +24,7 @@ export const ListingsGrid: React.FC = () => {
     activeFilterTab,
     setActiveFilterTab,
     openListingDetail,
+    t,
   } = useRiversStore();
 
   // Filter listings based on category, search, and tab
@@ -49,11 +50,11 @@ export const ListingsGrid: React.FC = () => {
     return true;
   });
 
-  const filterTabs: Array<{ id: FilterTab; label: string; icon?: React.ReactNode }> = [
-    { id: 'all', label: 'All Featured Stream' },
-    { id: 'bnpl', label: 'Rivers Flow BNPL', icon: <Zap className="w-3.5 h-3.5 text-cyan-400" /> },
-    { id: 'verified', label: 'Verified Escrow Only', icon: <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> },
-    { id: 'top_rated', label: 'Top Seller Rigs', icon: <Sparkles className="w-3.5 h-3.5 text-amber-400" /> },
+  const filterTabs: Array<{ id: FilterTab; labelKey: keyof typeof import('@/lib/i18n/translations').translations['en']; icon?: React.ReactNode }> = [
+    { id: 'all', labelKey: 'filterAll' },
+    { id: 'bnpl', labelKey: 'filterBnpl', icon: <Zap className="w-3.5 h-3.5 text-cyan-400" /> },
+    { id: 'verified', labelKey: 'filterVerified', icon: <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> },
+    { id: 'top_rated', labelKey: 'filterTopRated', icon: <Sparkles className="w-3.5 h-3.5 text-amber-400" /> },
   ];
 
   return (
@@ -73,7 +74,7 @@ export const ListingsGrid: React.FC = () => {
               }`}
             >
               {tab.icon}
-              {tab.label}
+              {t(tab.labelKey)}
             </button>
           ))}
         </div>
@@ -81,7 +82,7 @@ export const ListingsGrid: React.FC = () => {
         {/* Counter Info */}
         <div className="flex items-center gap-3 text-xs font-mono text-slate-400">
           <span>
-            Showing <strong className="text-cyan-400 font-bold">{filteredListings.length}</strong> verified listings
+            {t('showingVerifiedListings', { count: filteredListings.length })}
           </span>
         </div>
       </div>
@@ -90,10 +91,8 @@ export const ListingsGrid: React.FC = () => {
       {filteredListings.length === 0 ? (
         <GlassCard className="p-12 text-center my-8 max-w-md mx-auto">
           <SearchX className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-          <h3 className="text-lg font-bold text-slate-200 mb-1">No Listings Found</h3>
-          <p className="text-xs text-slate-400 mb-6">
-            We couldn&apos;t find any items matching your current filters or search terms.
-          </p>
+          <h3 className="text-lg font-bold text-slate-200 mb-1">{t('noListingsFound')}</h3>
+          <p className="text-xs text-slate-400 mb-6">{t('noListingsDesc')}</p>
           <Button
             onClick={() => {
               setActiveFilterTab('all');
@@ -103,7 +102,7 @@ export const ListingsGrid: React.FC = () => {
             variant="secondary"
             size="sm"
           >
-            Reset All Filters
+            {t('resetAllFilters')}
           </Button>
         </GlassCard>
       ) : (
@@ -138,17 +137,17 @@ export const ListingsGrid: React.FC = () => {
                         <ConditionBadge condition={item.condition} />
                         {item.safetyBadge && (
                           <Badge variant="emerald" size="sm" className="shadow-lg backdrop-blur-md">
-                            <ShieldCheck className="w-3 h-3" /> Escrow Verified
+                            <ShieldCheck className="w-3 h-3" /> {t('escrowVerified')}
                           </Badge>
                         )}
                       </div>
 
                       {/* Rivers Flow Finance BNPL Sticker */}
                       {item.flowFinanceEligible && (
-                        <div className="absolute bottom-3 left-3 z-20 bg-slate-950/80 backdrop-blur-md border border-cyan-500/40 px-2.5 py-1 rounded-lg flex items-center gap-1.5 shadow-xl">
+                        <div className="absolute bottom-3 ltr:left-3 rtl:right-3 z-20 bg-slate-950/80 backdrop-blur-md border border-cyan-500/40 px-2.5 py-1 rounded-lg flex items-center gap-1.5 shadow-xl">
                           <Zap className="w-3.5 h-3.5 text-cyan-400 fill-cyan-400" />
                           <span className="text-[10px] font-mono font-bold text-cyan-300">
-                            Or ${bnplMonthly}/mo with Rivers Flow
+                            {t('orWithRiversFlow', { amount: bnplMonthly })}
                           </span>
                         </div>
                       )}
@@ -171,7 +170,7 @@ export const ListingsGrid: React.FC = () => {
                           <span>•</span>
                           <span className="flex items-center gap-1">
                             <Eye className="w-3.5 h-3.5 text-slate-500" />
-                            {item.viewCount} views
+                            {t('viewsCount', { count: item.viewCount })}
                           </span>
                         </div>
                       </div>
@@ -180,7 +179,7 @@ export const ListingsGrid: React.FC = () => {
                       <div className="pt-4 border-t border-slate-900 flex items-end justify-between gap-3">
                         <div>
                           <span className="text-[10px] font-mono text-slate-500 uppercase block leading-none mb-1">
-                            Listing Price
+                            {t('listingPrice')}
                           </span>
                           <span className="text-xl font-extrabold font-mono text-slate-100 group-hover:text-cyan-400 transition-colors">
                             ${item.price.toLocaleString()}
@@ -194,7 +193,7 @@ export const ListingsGrid: React.FC = () => {
                             alt={item.seller.name}
                             className="w-8 h-8 rounded-full object-cover border border-cyan-500/40 shadow-sm"
                           />
-                          <div className="hidden sm:block text-right">
+                          <div className="hidden sm:block ltr:text-right rtl:text-left">
                             <span className="text-xs font-semibold text-slate-300 block leading-tight">
                               {item.seller.name}
                             </span>

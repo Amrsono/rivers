@@ -11,21 +11,17 @@ import { Listing } from '@/lib/types';
 import {
   Upload,
   Zap,
-  ShieldCheck,
   CheckCircle2,
   AlertCircle,
-  Plus,
   X,
   Sparkles,
-  Layers,
   ArrowRight,
   ArrowLeft,
-  Image as ImageIcon,
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 export const ListingCreatorModal: React.FC = () => {
-  const { isListingCreatorOpen, closeListingCreator, addListing, currentUser } =
+  const { isListingCreatorOpen, closeListingCreator, addListing, currentUser, t, language } =
     useRiversStore();
 
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4>(1);
@@ -154,18 +150,18 @@ export const ListingCreatorModal: React.FC = () => {
   };
 
   const steps = [
-    { num: 1, name: 'Basic Info' },
-    { num: 2, name: 'Media Upload' },
-    { num: 3, name: 'Pricing & Flow' },
-    { num: 4, name: 'Preview & Publish' },
+    { num: 1, nameKey: 'step1BasicInfo' as const },
+    { num: 2, nameKey: 'step2MediaUpload' as const },
+    { num: 3, nameKey: 'step3PricingFlow' as const },
+    { num: 4, nameKey: 'step4PreviewPublish' as const },
   ];
 
   return (
     <Modal
       isOpen={isListingCreatorOpen}
       onClose={closeListingCreator}
-      title="Create Rivers P2P Listing"
-      subtitle="Publish your item to thousands of verified buyers with instant Escrow and BNPL support."
+      title={t('createListingTitle')}
+      subtitle={t('createListingSubtitle')}
       maxWidth="2xl"
     >
       {/* Step Progress Indicator */}
@@ -198,7 +194,7 @@ export const ListingCreatorModal: React.FC = () => {
                 >
                   {isDone ? <CheckCircle2 className="w-4 h-4" /> : step.num}
                 </div>
-                <span className="text-[11px] font-mono whitespace-nowrap">{step.name}</span>
+                <span className="text-[11px] font-mono whitespace-nowrap">{t(step.nameKey)}</span>
               </div>
             );
           })}
@@ -210,13 +206,13 @@ export const ListingCreatorModal: React.FC = () => {
         <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
           <div>
             <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1 font-semibold">
-              Listing Title *
+              {t('listingTitleLabel')}
             </label>
             <input
               type="text"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              placeholder="e.g. AeroGlide Carbon Hydrofoil Board 2026 Edition"
+              placeholder={t('titlePlaceholder')}
               className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:border-cyan-400"
             />
             {validationErrors.title && (
@@ -229,7 +225,7 @@ export const ListingCreatorModal: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1 font-semibold">
-                Category Stream *
+                {t('categoryStreamLabel')}
               </label>
               <select
                 value={formData.categoryId}
@@ -238,7 +234,7 @@ export const ListingCreatorModal: React.FC = () => {
               >
                 {MOCK_CATEGORIES.map((cat) => (
                   <option key={cat.id} value={cat.id}>
-                    {cat.name}
+                    {t(cat.id as any) !== cat.id ? t(cat.id as any) : cat.name}
                   </option>
                 ))}
               </select>
@@ -246,31 +242,31 @@ export const ListingCreatorModal: React.FC = () => {
 
             <div>
               <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1 font-semibold">
-                Condition *
+                {t('conditionLabel')}
               </label>
               <select
                 value={formData.condition}
                 onChange={(e) => setFormData({ ...formData, condition: e.target.value as any })}
                 className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:border-cyan-400"
               >
-                <option value="NEW">Brand New (Sealed)</option>
-                <option value="LIKE_NEW">Like New (Mint)</option>
-                <option value="EXCELLENT">Excellent Condition</option>
-                <option value="GOOD">Good Condition</option>
-                <option value="FAIR">Fair Condition</option>
+                <option value="NEW">{t('condNew')}</option>
+                <option value="LIKE_NEW">{t('condLikeNew')}</option>
+                <option value="EXCELLENT">{t('condExcellent')}</option>
+                <option value="GOOD">{t('condGood')}</option>
+                <option value="FAIR">{t('condFair')}</option>
               </select>
             </div>
           </div>
 
           <div>
             <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1 font-semibold">
-              Description & Specifications *
+              {t('descSpecsLabel')}
             </label>
             <textarea
               rows={4}
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              placeholder="Describe condition, technical specs, accessories included, and provenance..."
+              placeholder={t('descPlaceholder')}
               className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:border-cyan-400 resize-none"
             />
             {validationErrors.description && (
@@ -286,27 +282,27 @@ export const ListingCreatorModal: React.FC = () => {
       {currentStep === 2 && (
         <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
           <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1 font-semibold">
-            Product Photos (Drag & Drop or Add Image URL)
+            {t('productPhotosLabel')}
           </label>
 
           {/* Interactive Drag & Drop Box Simulator */}
           <div className="p-8 rounded-2xl border-2 border-dashed border-cyan-500/40 bg-slate-950/60 text-center hover:border-cyan-400 transition-colors">
             <Upload className="w-8 h-8 text-cyan-400 mx-auto mb-2 animate-pulse" />
             <p className="text-sm font-semibold text-slate-200">
-              Drag & Drop high-resolution product media here
+              {t('dragDropText')}
             </p>
-            <p className="text-xs text-slate-500 mt-1">Supports PNG, JPG, WEBP up to 20MB</p>
+            <p className="text-xs text-slate-500 mt-1">{t('dragDropSubtext')}</p>
 
             <div className="mt-4 flex items-center justify-center gap-2 max-w-md mx-auto">
               <input
                 type="text"
                 value={imageUrlInput}
                 onChange={(e) => setImageUrlInput(e.target.value)}
-                placeholder="Or paste image URL (e.g. Unsplash URL)..."
+                placeholder={t('imageUrlPlaceholder')}
                 className="flex-1 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-cyan-400"
               />
               <Button onClick={handleAddImage} variant="secondary" size="sm">
-                Add Image
+                {t('addImageBtn')}
               </Button>
             </div>
           </div>
@@ -324,13 +320,13 @@ export const ListingCreatorModal: React.FC = () => {
                 <img src={img} alt={`Preview ${idx}`} className="w-full h-full object-cover" />
                 <button
                   onClick={() => handleRemoveImage(idx)}
-                  className="absolute top-1 right-1 p-1 rounded-full bg-slate-950/80 text-red-400 hover:text-red-300 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="absolute top-1 ltr:right-1 rtl:left-1 p-1 rounded-full bg-slate-950/80 text-red-400 hover:text-red-300 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
                 {idx === 0 && (
-                  <span className="absolute bottom-1 left-1 px-1.5 py-0.5 text-[9px] font-mono bg-cyan-950 text-cyan-300 rounded border border-cyan-500/40">
-                    Cover
+                  <span className="absolute bottom-1 ltr:left-1 rtl:right-1 px-1.5 py-0.5 text-[9px] font-mono bg-cyan-950 text-cyan-300 rounded border border-cyan-500/40">
+                    {t('coverBadge')}
                   </span>
                 )}
               </div>
@@ -345,10 +341,10 @@ export const ListingCreatorModal: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1 font-semibold">
-                Asking Price ($ USD) *
+                {t('askingPriceLabel')}
               </label>
               <div className="relative">
-                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 font-mono text-cyan-400 font-bold">
+                <span className="absolute ltr:left-3.5 rtl:right-3.5 top-1/2 -translate-y-1/2 font-mono text-cyan-400 font-bold">
                   $
                 </span>
                 <input
@@ -356,7 +352,7 @@ export const ListingCreatorModal: React.FC = () => {
                   value={formData.price || ''}
                   onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) })}
                   placeholder="2400"
-                  className="w-full pl-8 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-100 text-sm font-mono font-bold focus:outline-none focus:border-cyan-400"
+                  className="w-full ltr:pl-8 ltr:pr-4 rtl:pr-8 rtl:pl-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-100 text-sm font-mono font-bold focus:outline-none focus:border-cyan-400"
                 />
               </div>
               {validationErrors.price && (
@@ -368,7 +364,7 @@ export const ListingCreatorModal: React.FC = () => {
 
             <div>
               <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1 font-semibold">
-                Location City / District
+                {t('locationLabel')}
               </label>
               <input
                 type="text"
@@ -388,9 +384,9 @@ export const ListingCreatorModal: React.FC = () => {
                   <Zap className="w-5 h-5 fill-cyan-400" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-slate-100">Enable Rivers Flow BNPL</h4>
+                  <h4 className="text-sm font-bold text-slate-100">{t('enableBnpl')}</h4>
                   <p className="text-xs text-slate-400">
-                    Buyers can split payments into 4 installments. You get paid 100% upfront in Escrow.
+                    {t('enableBnplDesc')}
                   </p>
                 </div>
               </div>
@@ -406,18 +402,18 @@ export const ListingCreatorModal: React.FC = () => {
           {/* Tags */}
           <div>
             <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1 font-semibold">
-              Search Tags
+              {t('searchTagsLabel')}
             </label>
             <div className="flex gap-2 mb-2">
               <input
                 type="text"
                 value={tagInput}
                 onChange={(e) => setTagInput(e.target.value)}
-                placeholder="Add tag (e.g. Carbon, Watercraft)..."
+                placeholder={t('addTagPlaceholder')}
                 className="flex-1 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-cyan-400"
               />
               <Button onClick={handleAddTag} variant="secondary" size="sm">
-                Add Tag
+                {t('addTagBtn')}
               </Button>
             </div>
             <div className="flex flex-wrap gap-1.5">
@@ -444,7 +440,7 @@ export const ListingCreatorModal: React.FC = () => {
       {currentStep === 4 && (
         <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
           <h4 className="text-xs font-mono uppercase tracking-wider text-cyan-400 font-semibold">
-            Listing Live Preview
+            {t('livePreviewHeader')}
           </h4>
 
           <div className="p-4 rounded-2xl bg-slate-950 border border-cyan-500/30 flex flex-col sm:flex-row gap-4">
@@ -484,14 +480,19 @@ export const ListingCreatorModal: React.FC = () => {
           disabled={currentStep === 1}
           variant="ghost"
           size="md"
-          leftIcon={<ArrowLeft className="w-4 h-4" />}
+          leftIcon={language === 'ar' ? <ArrowRight className="w-4 h-4" /> : <ArrowLeft className="w-4 h-4" />}
         >
-          Back
+          {t('backBtn')}
         </Button>
 
         {currentStep < 4 ? (
-          <Button onClick={handleNextStep} variant="primary" size="md" rightIcon={<ArrowRight className="w-4 h-4" />}>
-            Continue to Step {currentStep + 1}
+          <Button
+            onClick={handleNextStep}
+            variant="primary"
+            size="md"
+            rightIcon={language === 'ar' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
+          >
+            {t('continueStepBtn', { step: currentStep + 1 })}
           </Button>
         ) : (
           <Button
@@ -500,7 +501,7 @@ export const ListingCreatorModal: React.FC = () => {
             size="md"
             leftIcon={<Sparkles className="w-4 h-4" />}
           >
-            Publish Listing Live
+            {t('publishLiveBtn')}
           </Button>
         )}
       </div>

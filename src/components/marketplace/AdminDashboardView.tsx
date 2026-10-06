@@ -7,10 +7,8 @@ import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 import {
   Activity,
-  ShieldAlert,
   TrendingUp,
   DollarSign,
-  Users,
   Zap,
   CheckCircle2,
   XCircle,
@@ -22,32 +20,32 @@ import {
 import { motion } from 'framer-motion';
 
 export const AdminDashboardView: React.FC = () => {
-  const { adminAnalytics, approveVerification, rejectVerification } = useRiversStore();
+  const { adminAnalytics, approveVerification, rejectVerification, t } = useRiversStore();
 
   const metrics = [
     {
-      label: 'Active Listings Stream',
+      label: t('activeListingsStream'),
       value: adminAnalytics.activeListings.toLocaleString(),
       change: '+14.2% vs last month',
       icon: <Layers className="w-5 h-5 text-cyan-400" />,
       glow: 'from-cyan-500/20 to-blue-500/10',
     },
     {
-      label: 'Total Marketplace GMV',
+      label: t('totalMarketplaceGmv'),
       value: `$${(adminAnalytics.totalMarketplaceGmv / 1000000).toFixed(2)}M`,
       change: `+${adminAnalytics.gmvGrowthPercent}% growth rate`,
       icon: <TrendingUp className="w-5 h-5 text-emerald-400" />,
       glow: 'from-emerald-500/20 to-teal-500/10',
     },
     {
-      label: 'Active Escrow Volume',
+      label: t('activeEscrowVolume'),
       value: `$${(adminAnalytics.escrowVolume / 1000000).toFixed(2)}M`,
       change: 'Protected by Smart Escrow',
       icon: <DollarSign className="w-5 h-5 text-amber-400" />,
       glow: 'from-amber-500/20 to-orange-500/10',
     },
     {
-      label: 'Rivers Flow BNPL Volume',
+      label: t('riversFlowBnplVolume'),
       value: `$${(adminAnalytics.bnplFinancedVolume / 1000000).toFixed(2)}M`,
       change: '0% Default rate',
       icon: <Zap className="w-5 h-5 text-purple-400" />,
@@ -63,17 +61,17 @@ export const AdminDashboardView: React.FC = () => {
           <div className="flex items-center gap-2 mb-1">
             <Activity className="w-4 h-4 text-cyan-400 animate-pulse" />
             <span className="text-xs font-mono uppercase tracking-widest text-cyan-400 font-bold">
-              Real-Time Telemetry Console
+              {t('telemetryConsole')}
             </span>
           </div>
           <h1 className="text-2xl font-extrabold text-slate-100 tracking-tight">
-            Rivers Marketplace Operations Dashboard
+            {t('adminDashboardTitle')}
           </h1>
         </div>
 
         <div className="flex items-center gap-3">
           <Badge variant="emerald" size="md">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping mr-1" /> System Operational
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping ltr:mr-1 rtl:ml-1" /> {t('systemOperational')}
           </Badge>
           <span className="text-xs font-mono text-slate-400">Node: us-east-2 (Escrow Relay Active)</span>
         </div>
@@ -83,7 +81,7 @@ export const AdminDashboardView: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {metrics.map((metric, idx) => (
           <GlassCard key={idx} className="p-5 relative overflow-hidden">
-            <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl ${metric.glow} rounded-full blur-2xl -z-10`} />
+            <div className={`absolute top-0 ltr:right-0 rtl:left-0 w-24 h-24 bg-gradient-to-bl ${metric.glow} rounded-full blur-2xl -z-10`} />
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-mono uppercase tracking-wider text-slate-400 font-medium">
                 {metric.label}
@@ -103,10 +101,10 @@ export const AdminDashboardView: React.FC = () => {
           <div className="flex items-center justify-between mb-6">
             <div>
               <h3 className="text-base font-bold text-slate-100 flex items-center gap-2">
-                <BarChart3 className="w-4 h-4 text-cyan-400" /> Hourly Marketplace Traffic & Orders
+                <BarChart3 className="w-4 h-4 text-cyan-400" /> {t('hourlyTrafficTitle')}
               </h3>
               <p className="text-xs text-slate-400 font-mono mt-0.5">
-                Real-time WebSocket event telemetry feed
+                {t('websocketTelemetry')}
               </p>
             </div>
             <span className="text-xs font-mono text-slate-400 px-3 py-1 rounded-lg bg-slate-900 border border-slate-800">
@@ -149,7 +147,7 @@ export const AdminDashboardView: React.FC = () => {
         {/* Category GMV Share */}
         <GlassCard className="lg:col-span-4 p-6">
           <h3 className="text-base font-bold text-slate-100 mb-1 flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-amber-400" /> Stream GMV Share
+            <Sparkles className="w-4 h-4 text-amber-400" /> {t('streamGmvShare')}
           </h3>
           <p className="text-xs text-slate-400 font-mono mb-6">Volume per category stream</p>
 
@@ -177,20 +175,20 @@ export const AdminDashboardView: React.FC = () => {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h3 className="text-base font-bold text-slate-100 flex items-center gap-2">
-              <FileCheck className="w-4 h-4 text-cyan-400" /> User Identity Verification Queue
+              <FileCheck className="w-4 h-4 text-cyan-400" /> {t('userVerificationQueue')}
             </h3>
             <p className="text-xs text-slate-400 font-mono mt-0.5">
-              Review seller passport & ID documents before awarding Rivers Safety Badge
+              {t('userVerificationDesc')}
             </p>
           </div>
           <Badge variant="cyan" size="md">
-            {adminAnalytics.recentVerifications.length} Pending Approval
+            {t('pendingApprovalCount', { count: adminAnalytics.recentVerifications.length })}
           </Badge>
         </div>
 
         {adminAnalytics.recentVerifications.length === 0 ? (
           <div className="p-8 text-center text-xs font-mono text-slate-500">
-            ✓ All user verification requests processed!
+            {t('allVerificationsProcessed')}
           </div>
         ) : (
           <div className="divide-y divide-slate-900">
@@ -220,7 +218,7 @@ export const AdminDashboardView: React.FC = () => {
                     size="sm"
                     leftIcon={<CheckCircle2 className="w-3.5 h-3.5" />}
                   >
-                    Approve Badge
+                    {t('approveBadge')}
                   </Button>
                   <Button
                     onClick={() => rejectVerification(req.id)}
@@ -228,7 +226,7 @@ export const AdminDashboardView: React.FC = () => {
                     size="sm"
                     leftIcon={<XCircle className="w-3.5 h-3.5" />}
                   >
-                    Reject
+                    {t('reject')}
                   </Button>
                 </div>
               </div>

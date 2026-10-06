@@ -12,6 +12,7 @@ import {
   Sparkles,
   Layers,
   ChevronRight,
+  ChevronLeft,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { clsx } from 'clsx';
@@ -26,7 +27,7 @@ const iconMap: Record<string, React.ReactNode> = {
 };
 
 export const CategoryStream: React.FC = () => {
-  const { selectedCategory, setSelectedCategory } = useRiversStore();
+  const { selectedCategory, setSelectedCategory, t, language } = useRiversStore();
 
   return (
     <section className="mx-auto max-w-7xl px-4 sm:px-6 mb-8">
@@ -34,14 +35,19 @@ export const CategoryStream: React.FC = () => {
         <div className="flex items-center gap-2">
           <Layers className="w-4 h-4 text-cyan-400" />
           <h2 className="text-xs font-mono tracking-widest text-slate-400 uppercase">
-            Intelligent Category Streams
+            {t('intelligentCategoryStreams')}
           </h2>
         </div>
         <button
           onClick={() => setSelectedCategory('all')}
           className="text-xs font-mono text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1 cursor-pointer"
         >
-          View All Streams <ChevronRight className="w-3.5 h-3.5" />
+          {t('viewAllStreams')}{' '}
+          {language === 'ar' ? (
+            <ChevronLeft className="w-3.5 h-3.5" />
+          ) : (
+            <ChevronRight className="w-3.5 h-3.5" />
+          )}
         </button>
       </div>
 
@@ -52,7 +58,7 @@ export const CategoryStream: React.FC = () => {
           whileHover={{ y: -3, scale: 1.02 }}
           onClick={() => setSelectedCategory('all')}
           className={clsx(
-            'flex-shrink-0 flex items-center gap-3.5 px-5 py-3.5 rounded-2xl border transition-all duration-300 cursor-pointer text-left',
+            'flex-shrink-0 flex items-center gap-3.5 px-5 py-3.5 rounded-2xl border transition-all duration-300 cursor-pointer text-left rtl:text-right',
             selectedCategory === 'all'
               ? 'bg-gradient-to-r from-cyan-500/20 to-blue-600/20 border-cyan-400 text-cyan-300 shadow-[0_0_20px_rgba(6,182,212,0.25)] ring-1 ring-cyan-500/30'
               : 'bg-slate-950/60 backdrop-blur-xl border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-900/60'
@@ -69,21 +75,25 @@ export const CategoryStream: React.FC = () => {
             <Layers className="w-5 h-5" />
           </div>
           <div>
-            <span className="block text-sm font-bold tracking-tight">All Streams</span>
-            <span className="text-[11px] font-mono text-slate-500">Live P2P Catalog</span>
+            <span className="block text-sm font-bold tracking-tight">{t('allStreams')}</span>
+            <span className="text-[11px] font-mono text-slate-500">{t('liveP2pCatalog')}</span>
           </div>
         </motion.button>
 
         {/* Dynamic Category Cards */}
         {MOCK_CATEGORIES.map((cat) => {
           const isSelected = selectedCategory === cat.id;
+          const translatedName = t(cat.id as any) !== cat.id ? t(cat.id as any) : cat.name;
+          const translatedDesc =
+            t(`${cat.id}_desc` as any) !== `${cat.id}_desc` ? t(`${cat.id}_desc` as any) : cat.description;
+
           return (
             <motion.button
               key={cat.id}
               whileHover={{ y: -3, scale: 1.02 }}
               onClick={() => setSelectedCategory(cat.id)}
               className={clsx(
-                'flex-shrink-0 flex items-center gap-3.5 px-5 py-3.5 rounded-2xl border transition-all duration-300 cursor-pointer text-left max-w-xs',
+                'flex-shrink-0 flex items-center gap-3.5 px-5 py-3.5 rounded-2xl border transition-all duration-300 cursor-pointer text-left rtl:text-right max-w-xs',
                 isSelected
                   ? 'bg-gradient-to-r from-cyan-500/20 to-blue-600/20 border-cyan-400 text-cyan-300 shadow-[0_0_20px_rgba(6,182,212,0.25)] ring-1 ring-cyan-500/30'
                   : 'bg-slate-950/60 backdrop-blur-xl border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-900/60'
@@ -97,15 +107,15 @@ export const CategoryStream: React.FC = () => {
               >
                 {iconMap[cat.icon] || <Cpu className="w-5 h-5" />}
               </div>
-              <div className="truncate">
+              <div className="truncate flex-1">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-sm font-bold tracking-tight truncate">{cat.name}</span>
+                  <span className="text-sm font-bold tracking-tight truncate">{translatedName}</span>
                   <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-900 text-cyan-400 border border-slate-800 shrink-0">
                     {cat.itemCount}
                   </span>
                 </div>
                 <span className="text-[11px] text-slate-400 truncate block mt-0.5">
-                  {cat.description}
+                  {translatedDesc}
                 </span>
               </div>
             </motion.button>

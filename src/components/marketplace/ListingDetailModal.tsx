@@ -11,20 +11,15 @@ import {
   Zap,
   MapPin,
   Eye,
-  Calendar,
   MessageSquare,
-  Sparkles,
   Lock,
   ChevronLeft,
   ChevronRight,
   CheckCircle2,
-  Share2,
-  Heart,
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 export const ListingDetailModal: React.FC = () => {
-  const { activeListingDetail, closeListingDetail, openBNPLCheckout, addNotification } =
+  const { activeListingDetail, closeListingDetail, openBNPLCheckout, addNotification, t, language } =
     useRiversStore();
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -73,9 +68,9 @@ export const ListingDetailModal: React.FC = () => {
                       prev === 0 ? item.images.length - 1 : prev - 1
                     )
                   }
-                  className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-xl bg-slate-950/70 border border-slate-800 text-slate-200 hover:text-cyan-400 backdrop-blur-md transition-all opacity-0 group-hover:opacity-100"
+                  className="absolute ltr:left-3 rtl:right-3 top-1/2 -translate-y-1/2 p-2 rounded-xl bg-slate-950/70 border border-slate-800 text-slate-200 hover:text-cyan-400 backdrop-blur-md transition-all opacity-0 group-hover:opacity-100 cursor-pointer z-20"
                 >
-                  <ChevronLeft className="w-5 h-5" />
+                  {language === 'ar' ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
                 </button>
                 <button
                   onClick={() =>
@@ -83,19 +78,19 @@ export const ListingDetailModal: React.FC = () => {
                       prev === item.images.length - 1 ? 0 : prev + 1
                     )
                   }
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-xl bg-slate-950/70 border border-slate-800 text-slate-200 hover:text-cyan-400 backdrop-blur-md transition-all opacity-0 group-hover:opacity-100"
+                  className="absolute ltr:right-3 rtl:left-3 top-1/2 -translate-y-1/2 p-2 rounded-xl bg-slate-950/70 border border-slate-800 text-slate-200 hover:text-cyan-400 backdrop-blur-md transition-all opacity-0 group-hover:opacity-100 cursor-pointer z-20"
                 >
-                  <ChevronRight className="w-5 h-5" />
+                  {language === 'ar' ? <ChevronLeft className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
                 </button>
               </>
             )}
 
             {/* Floating Escrow Badge */}
-            <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
+            <div className="absolute top-4 ltr:left-4 rtl:right-4 z-10 flex items-center gap-2">
               <ConditionBadge condition={item.condition} />
               {item.safetyBadge && (
                 <Badge variant="emerald" size="sm">
-                  <ShieldCheck className="w-3.5 h-3.5" /> Escrow Protected
+                  <ShieldCheck className="w-3.5 h-3.5" /> {t('escrowVerified')}
                 </Badge>
               )}
             </div>
@@ -123,7 +118,7 @@ export const ListingDetailModal: React.FC = () => {
           {/* Technical Product Specifications */}
           <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80">
             <h4 className="text-xs font-mono uppercase tracking-wider text-cyan-400 mb-2 font-semibold">
-              Item Details & Tags
+              {t('itemDetailsTags')}
             </h4>
             <p className="text-xs text-slate-300 leading-relaxed mb-4">{item.description}</p>
 
@@ -159,14 +154,14 @@ export const ListingDetailModal: React.FC = () => {
               <span>•</span>
               <span className="flex items-center gap-1">
                 <Eye className="w-3.5 h-3.5 text-slate-500" />
-                {item.viewCount} Views
+                {t('viewsCount', { count: item.viewCount })}
               </span>
             </div>
 
             {/* Main Price Tag */}
             <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 mb-6">
               <span className="text-xs font-mono text-slate-500 uppercase block mb-1">
-                Full Escrow Purchase Price
+                {t('fullEscrowPrice')}
               </span>
               <div className="flex items-baseline gap-2">
                 <span className="text-3xl font-extrabold font-mono text-slate-100">
@@ -187,44 +182,40 @@ export const ListingDetailModal: React.FC = () => {
                     <Zap className="w-4 h-4 fill-cyan-400" />
                   </div>
                   <span className="text-xs font-bold font-mono tracking-wider text-cyan-300 uppercase">
-                    Rivers Flow Finance
+                    {t('riversFlowFinance')}
                   </span>
                 </div>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-400 border border-cyan-500/30">
-                  0% APR Installments
+                  {t('zeroAprInstallments')}
                 </span>
               </div>
 
               {/* Installment Split Preview */}
               <div className="mb-4">
                 <p className="text-sm font-semibold text-slate-200">
-                  Or 4 interest-free payments of{' '}
-                  <strong className="text-cyan-300 font-extrabold font-mono text-base">
-                    ${installment4}
-                  </strong>{' '}
-                  with Rivers Flow
+                  {t('bnplSplitPreview', { amount: installment4 })}
                 </p>
                 <p className="text-[11px] text-slate-400 mt-1">
-                  Pay 25% today. Remaining 3 payments bi-weekly with zero fees or credit impact.
+                  {t('bnplDescText')}
                 </p>
               </div>
 
               {/* 4-Step Timeline Preview Bar */}
               <div className="grid grid-cols-4 gap-1.5 pt-3 border-t border-cyan-500/20">
                 <div className="text-center p-2 rounded-xl bg-cyan-950/60 border border-cyan-500/30">
-                  <span className="block text-[9px] font-mono text-cyan-400 font-bold">Today</span>
+                  <span className="block text-[9px] font-mono text-cyan-400 font-bold">{t('today')}</span>
                   <span className="text-xs font-mono font-extrabold text-slate-100">${installment4}</span>
                 </div>
                 <div className="text-center p-2 rounded-xl bg-slate-900/60 border border-slate-800">
-                  <span className="block text-[9px] font-mono text-slate-500">2 Weeks</span>
+                  <span className="block text-[9px] font-mono text-slate-500">{t('weeks2')}</span>
                   <span className="text-xs font-mono text-slate-300">${installment4}</span>
                 </div>
                 <div className="text-center p-2 rounded-xl bg-slate-900/60 border border-slate-800">
-                  <span className="block text-[9px] font-mono text-slate-500">4 Weeks</span>
+                  <span className="block text-[9px] font-mono text-slate-500">{t('weeks4')}</span>
                   <span className="text-xs font-mono text-slate-300">${installment4}</span>
                 </div>
                 <div className="text-center p-2 rounded-xl bg-slate-900/60 border border-slate-800">
-                  <span className="block text-[9px] font-mono text-slate-500">6 Weeks</span>
+                  <span className="block text-[9px] font-mono text-slate-500">{t('weeks6')}</span>
                   <span className="text-xs font-mono text-slate-300">${installment4}</span>
                 </div>
               </div>
@@ -237,7 +228,7 @@ export const ListingDetailModal: React.FC = () => {
                 className="w-full mt-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold text-xs uppercase tracking-wider hover:from-cyan-400 hover:to-blue-500 shadow-lg shadow-cyan-950/50 transition-all cursor-pointer flex items-center justify-center gap-2"
               >
                 <Zap className="w-4 h-4 fill-slate-950" />
-                Select Rivers Flow BNPL Split
+                {t('selectBnplSplit')}
               </button>
             </div>
 
@@ -257,7 +248,7 @@ export const ListingDetailModal: React.FC = () => {
                   <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
                     <span className="text-amber-400 font-bold">★ {item.seller.rating}</span>
                     <span>•</span>
-                    <span>{item.seller.salesCount} Verified Sales</span>
+                    <span>{item.seller.salesCount} {t('verifiedSales')}</span>
                   </div>
                 </div>
               </div>
@@ -268,7 +259,7 @@ export const ListingDetailModal: React.FC = () => {
                 size="sm"
                 leftIcon={<MessageSquare className="w-3.5 h-3.5" />}
               >
-                Chat
+                {t('chat')}
               </Button>
             </div>
 
@@ -276,7 +267,7 @@ export const ListingDetailModal: React.FC = () => {
             {isMessageOpen && (
               <div className="p-4 rounded-2xl bg-slate-950 border border-cyan-500/30 mb-6 space-y-3">
                 <h5 className="text-xs font-mono text-cyan-400 uppercase font-semibold flex items-center gap-2">
-                  <MessageSquare className="w-3.5 h-3.5" /> Direct Seller Encrypted Channel
+                  <MessageSquare className="w-3.5 h-3.5" /> {t('directSellerChannel')}
                 </h5>
                 <div className="max-h-40 overflow-y-auto space-y-2 p-2 bg-slate-900/60 rounded-xl text-xs">
                   {chatHistory.map((msg, i) => (
@@ -284,8 +275,8 @@ export const ListingDetailModal: React.FC = () => {
                       key={i}
                       className={`p-2 rounded-lg ${
                         msg.sender === 'user'
-                          ? 'bg-cyan-950 text-cyan-200 text-right ml-6 border border-cyan-500/30'
-                          : 'bg-slate-800 text-slate-300 mr-6'
+                          ? 'bg-cyan-950 text-cyan-200 ltr:text-right rtl:text-left ltr:ml-6 rtl:mr-6 border border-cyan-500/30'
+                          : 'bg-slate-800 text-slate-300 ltr:mr-6 rtl:ml-6'
                       }`}
                     >
                       {msg.text}
@@ -297,11 +288,11 @@ export const ListingDetailModal: React.FC = () => {
                     type="text"
                     value={chatInput}
                     onChange={(e) => setChatInput(e.target.value)}
-                    placeholder="Ask seller about shipping or condition..."
+                    placeholder={t('chatPlaceholder')}
                     className="flex-1 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-cyan-400"
                   />
                   <Button type="submit" variant="primary" size="sm">
-                    Send
+                    {t('sendBtn')}
                   </Button>
                 </form>
               </div>
@@ -313,14 +304,15 @@ export const ListingDetailModal: React.FC = () => {
             <Button
               onClick={() => {
                 closeListingDetail();
-                addNotification('success', `Escrow payment initialized for "${item.title}". Funds held securely by Rivers.`);
+                const msg = t('escrowInitializedSuccess', { title: item.title });
+                addNotification('success', msg);
               }}
               variant="primary"
               size="lg"
               className="w-full"
               leftIcon={<Lock className="w-4 h-4" />}
             >
-              Buy Now with Escrow (${item.price.toLocaleString()})
+              {t('buyNowEscrow', { price: item.price.toLocaleString() })}
             </Button>
           </div>
         </div>
