@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useRiversStore } from '@/lib/store/useRiversStore';
 import { GlassCard } from '../ui/GlassCard';
 import { Button } from '../ui/Button';
@@ -16,11 +16,26 @@ import {
   Layers,
   BarChart3,
   Sparkles,
+  Brain,
+  Key,
+  ExternalLink,
+  CheckCheck,
+  AlertTriangle,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export const AdminDashboardView: React.FC = () => {
   const { adminAnalytics, approveVerification, rejectVerification, t } = useRiversStore();
+
+  // AI Settings local state (in a real app this would persist to a server setting)
+  const [geminiKey, setGeminiKey] = useState('');
+  const [keySaved, setKeySaved] = useState(false);
+
+  const handleSaveKey = () => {
+    // Placeholder: in production, POST to /api/admin/settings with the key
+    setKeySaved(true);
+    setTimeout(() => setKeySaved(false), 3000);
+  };
 
   const metrics = [
     {
@@ -234,6 +249,90 @@ export const AdminDashboardView: React.FC = () => {
           </div>
         )}
       </GlassCard>
+
+      {/* ── AI Assist Settings ─────────────────────────────────────── */}
+      <GlassCard className="p-6 space-y-5">
+        {/* Header */}
+        <div className="flex items-start gap-4">
+          <div className="p-3 rounded-2xl bg-gradient-to-br from-violet-500/20 to-indigo-500/10 border border-violet-500/30 text-violet-400 shrink-0">
+            <Brain className="w-6 h-6" />
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-slate-100">{t('aiSettingsTitle')}</h3>
+            <p className="text-xs text-slate-400 mt-0.5">{t('aiSettingsSubtitle')}</p>
+          </div>
+          <div className="ml-auto flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs font-mono font-semibold"
+               style={keySaved
+                 ? { borderColor: 'rgba(16,185,129,0.4)', color: '#34d399', background: 'rgba(6,78,59,0.3)' }
+                 : { borderColor: 'rgba(100,116,139,0.3)', color: '#64748b', background: 'rgba(15,23,42,0.5)' }
+               }>
+            {keySaved ? (
+              <><CheckCheck className="w-3 h-3" /> {t('geminiApiKeyActive')}</>
+            ) : (
+              <><AlertTriangle className="w-3 h-3" /> {t('geminiApiKeyInactive')}</>
+            )}
+          </div>
+        </div>
+
+        {/* API Key Input */}
+        <div className="space-y-2">
+          <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold">
+            <Key className="w-3 h-3 inline mr-1" />
+            {t('geminiApiKeyLabel')}
+          </label>
+          <div className="flex gap-2">
+            <input
+              type="password"
+              value={geminiKey}
+              onChange={(e) => { setGeminiKey(e.target.value); setKeySaved(false); }}
+              placeholder={t('geminiApiKeyPlaceholder')}
+              className="flex-1 px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-100 text-sm font-mono focus:outline-none focus:border-violet-400 placeholder:text-slate-600"
+            />
+            <Button
+              onClick={handleSaveKey}
+              disabled={!geminiKey.trim()}
+              variant="secondary"
+              size="md"
+              leftIcon={keySaved ? <CheckCheck className="w-4 h-4" /> : <Sparkles className="w-4 h-4" />}
+            >
+              {keySaved ? 'Saved!' : t('geminiApiKeySave')}
+            </Button>
+          </div>
+        </div>
+
+        {/* Feature grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          {[
+            { icon: '✍️', label: 'Generate Description' },
+            { icon: '✨', label: 'Polish Description' },
+            { icon: '🏷️', label: 'Auto-Detect Category' },
+            { icon: '💰', label: 'Smart Price Suggestion' },
+            { icon: '🔖', label: 'Auto-Generate Tags' },
+            { icon: '⭐', label: 'Listing Readiness Score' },
+          ].map((f) => (
+            <div
+              key={f.label}
+              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-900/60 border border-slate-800 text-xs text-slate-400"
+            >
+              <span>{f.icon}</span>
+              <span>{f.label}</span>
+              {keySaved && <CheckCircle2 className="w-3 h-3 text-emerald-400 ml-auto shrink-0" />}
+            </div>
+          ))}
+        </div>
+
+        {/* Get key link */}
+        <a
+          href="https://aistudio.google.com/app/apikey"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 text-xs text-violet-400 hover:text-violet-300 font-mono transition-colors"
+        >
+          <ExternalLink className="w-3 h-3" />
+          {t('geminiGetKeyLink')}
+        </a>
+      </GlassCard>
+
     </div>
   );
 };
