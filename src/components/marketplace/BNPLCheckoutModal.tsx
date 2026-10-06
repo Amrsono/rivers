@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 
 export const BNPLCheckoutModal: React.FC = () => {
-  const { activeBNPLCheckout, closeBNPLCheckout, addNotification, userBalance, t } =
+  const { activeBNPLCheckout, closeBNPLCheckout, addNotification, userBalance, t, numLocale } =
     useRiversStore();
 
   const [paymentMethod, setPaymentMethod] = useState<'wallet' | 'card'>('wallet');
@@ -76,7 +76,7 @@ export const BNPLCheckoutModal: React.FC = () => {
           <div className="flex-1">
             <h4 className="text-sm font-bold text-slate-100 line-clamp-1">{item.title}</h4>
             <span className="text-xs font-mono text-slate-400">
-              {t('totalPriceLabel')} <strong className="text-cyan-400 font-bold">ج.م {totalPrice.toLocaleString()} EGP</strong>
+              {t('totalPriceLabel')} <strong className="text-cyan-400 font-bold">ج.م {totalPrice.toLocaleString(numLocale)} EGP</strong>
             </span>
           </div>
           <Badge variant="neon" size="sm">
@@ -114,7 +114,7 @@ export const BNPLCheckoutModal: React.FC = () => {
                   </div>
                 </div>
                 <div className="ltr:text-right rtl:text-left">
-                  <span className="text-sm font-mono font-extrabold">ج.م{item.amount}</span>
+                  <span className="text-sm font-mono font-extrabold">ج.م{item.amount.toLocaleString(numLocale)}</span>
                   {item.isToday && (
                     <span className="block text-[9px] font-mono text-cyan-400 font-bold">
                       {t('dueRightNow')}

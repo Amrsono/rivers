@@ -16,6 +16,7 @@ interface RiversStoreState {
   // i18n Language & Direction
   language: Language;
   setLanguage: (lang: Language) => void;
+  numLocale: string; // 'en-US' or 'ar-EG' — drives all number formatting
   t: (key: keyof typeof translations['en'], params?: Record<string, string | number>) => string;
 
   // Navigation & View State
@@ -64,8 +65,9 @@ interface RiversStoreState {
 
 export const useRiversStore = create<RiversStoreState>((set, get) => ({
   language: 'en',
+  numLocale: 'en-US',
   setLanguage: (lang) => {
-    set({ language: lang });
+    set({ language: lang, numLocale: lang === 'ar' ? 'ar-EG' : 'en-US' });
     if (typeof document !== 'undefined') {
       document.documentElement.setAttribute('lang', lang);
       document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');

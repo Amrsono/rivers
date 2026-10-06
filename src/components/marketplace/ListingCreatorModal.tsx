@@ -69,9 +69,10 @@ interface AIResultPanelProps {
   onApply: (result: AIResult) => void;
   onDismiss: () => void;
   t: (key: string) => string;
+  numLocale: string;
 }
 
-const AIResultPanel: React.FC<AIResultPanelProps> = ({ result, onApply, onDismiss, t }) => {
+const AIResultPanel: React.FC<AIResultPanelProps> = ({ result, onApply, onDismiss, t, numLocale }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: -8, scale: 0.98 }}
@@ -116,15 +117,15 @@ const AIResultPanel: React.FC<AIResultPanelProps> = ({ result, onApply, onDismis
         <div>
           <p className="text-xs text-slate-400 mb-2">{t('aiPriceRangeLabel')}</p>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono text-slate-500">ج.م {result.priceMin?.toLocaleString()}</span>
+            <span className="text-xs font-mono text-slate-500">ج.م {result.priceMin?.toLocaleString(numLocale)}</span>
             <div className="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
               <div className="h-full bg-gradient-to-r from-cyan-600 to-violet-500 rounded-full" style={{ width: '60%' }} />
             </div>
-            <span className="text-xs font-mono text-slate-500">ج.م {result.priceMax?.toLocaleString()}</span>
+            <span className="text-xs font-mono text-slate-500">ج.م {result.priceMax?.toLocaleString(numLocale)}</span>
           </div>
           <div className="mt-2 text-center">
             <span className="text-lg font-extrabold font-mono text-cyan-400">
-              ج.م {result.priceSuggested?.toLocaleString()}
+              ج.م {result.priceSuggested?.toLocaleString(numLocale)}
             </span>
             <span className="text-xs text-slate-500 ml-1">suggested</span>
           </div>
@@ -323,7 +324,7 @@ const AIAssistBar: React.FC<AIAssistBarProps> = ({ modes, loadingMode, onTrigger
 
 // ── Main Component ─────────────────────────────────────────────────────────
 export const ListingCreatorModal: React.FC = () => {
-  const { isListingCreatorOpen, closeListingCreator, addListing, currentUser, t, language } =
+  const { isListingCreatorOpen, closeListingCreator, addListing, currentUser, t, language, numLocale } =
     useRiversStore();
 
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4>(1);
@@ -526,6 +527,7 @@ export const ListingCreatorModal: React.FC = () => {
         onApply={applyAIResult}
         onDismiss={() => setAiResult(null)}
         t={t as any}
+        numLocale={numLocale}
       />
     </AnimatePresence>
   ) : null;
@@ -886,7 +888,7 @@ export const ListingCreatorModal: React.FC = () => {
               <p className="text-xs text-slate-400 line-clamp-2 mb-3">{formData.description}</p>
               <div className="flex items-center justify-between pt-2 border-t border-slate-900">
                 <span className="text-xl font-extrabold font-mono text-cyan-400">
-                  ج.م {formData.price.toLocaleString()}
+                  ج.م {formData.price.toLocaleString(numLocale)}
                 </span>
                 <span className="text-xs font-mono text-slate-500">{formData.location}</span>
               </div>

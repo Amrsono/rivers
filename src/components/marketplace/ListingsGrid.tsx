@@ -24,6 +24,7 @@ export const ListingsGrid: React.FC = () => {
     activeFilterTab,
     setActiveFilterTab,
     openListingDetail,
+    numLocale,
     t,
   } = useRiversStore();
 
@@ -182,7 +183,7 @@ export const ListingsGrid: React.FC = () => {
                             {t('listingPrice')}
                           </span>
                           <span className="text-xl font-extrabold font-mono text-slate-100 group-hover:text-cyan-400 transition-colors">
-                            ج.م {item.price.toLocaleString()}
+                            ج.م {item.price.toLocaleString(numLocale)}
                           </span>
                         </div>
 
