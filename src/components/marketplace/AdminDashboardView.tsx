@@ -25,7 +25,7 @@ import {
 import { motion } from 'framer-motion';
 
 export const AdminDashboardView: React.FC = () => {
-  const { adminAnalytics, approveVerification, rejectVerification, t, numLocale } = useRiversStore();
+  const { adminAnalytics, approveVerification, rejectVerification, t, numLocale, formatPrice, formatNumber } = useRiversStore();
 
   // AI Settings local state
   const [geminiKey, setGeminiKey] = useState('');
@@ -62,28 +62,28 @@ export const AdminDashboardView: React.FC = () => {
   const metrics = [
     {
       label: t('activeListingsStream'),
-      value: adminAnalytics.activeListings.toLocaleString(),
+      value: formatNumber(adminAnalytics.activeListings),
       change: '+14.2% vs last month',
       icon: <Layers className="w-5 h-5 text-cyan-400" />,
       glow: 'from-cyan-500/20 to-blue-500/10',
     },
     {
       label: t('totalMarketplaceGmv'),
-      value: `ج.م ${(adminAnalytics.totalMarketplaceGmv / 1000000).toLocaleString(numLocale, { maximumFractionDigits: 2 })}M`,
+      value: formatPrice(adminAnalytics.totalMarketplaceGmv, true),
       change: `+${adminAnalytics.gmvGrowthPercent}% growth rate`,
       icon: <TrendingUp className="w-5 h-5 text-emerald-400" />,
       glow: 'from-emerald-500/20 to-teal-500/10',
     },
     {
       label: t('activeEscrowVolume'),
-      value: `ج.م ${(adminAnalytics.escrowVolume / 1000000).toLocaleString(numLocale, { maximumFractionDigits: 2 })}M`,
+      value: formatPrice(adminAnalytics.escrowVolume, true),
       change: 'Protected by Smart Escrow',
       icon: <DollarSign className="w-5 h-5 text-amber-400" />,
       glow: 'from-amber-500/20 to-orange-500/10',
     },
     {
       label: t('riversFlowBnplVolume'),
-      value: `ج.م ${(adminAnalytics.bnplFinancedVolume / 1000000).toLocaleString(numLocale, { maximumFractionDigits: 2 })}M`,
+      value: formatPrice(adminAnalytics.bnplFinancedVolume, true),
       change: '0% Default rate',
       icon: <Zap className="w-5 h-5 text-purple-400" />,
       glow: 'from-purple-500/20 to-indigo-500/10',
@@ -145,7 +145,7 @@ export const AdminDashboardView: React.FC = () => {
               </p>
             </div>
             <span className="text-xs font-mono text-slate-400 px-3 py-1 rounded-lg bg-slate-900 border border-slate-800">
-              Peak: 56,200 req/hr
+              Peak: {formatNumber(56200)} req/hr
             </span>
           </div>
 
@@ -157,7 +157,7 @@ export const AdminDashboardView: React.FC = () => {
               return (
                 <div key={idx} className="flex-1 flex flex-col items-center gap-2 group h-full justify-end">
                   <div className="text-[10px] font-mono text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                    {bar.visitors.toLocaleString()}
+                    {formatNumber(bar.visitors)}
                   </div>
                   <div className="w-full bg-slate-900 rounded-t-xl overflow-hidden h-full flex items-end">
                     <motion.div
@@ -193,7 +193,7 @@ export const AdminDashboardView: React.FC = () => {
               <div key={idx} className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs font-mono">
                   <span className="text-slate-300 font-semibold">{cat.category}</span>
-                  <span className="text-cyan-400 font-bold">ج.م{(cat.value / 1000).toLocaleString(numLocale, { maximumFractionDigits: 0 })}k</span>
+                  <span className="text-cyan-400 font-bold">{formatPrice(cat.value, true)}</span>
                 </div>
                 <div className="w-full h-2 rounded-full bg-slate-900 overflow-hidden">
                   <div

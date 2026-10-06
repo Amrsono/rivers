@@ -12,7 +12,7 @@ export const translations = {
     matchesLabel: 'Matches',
     predictiveAi: 'Instant Predictive AI',
     noMatchingListings: 'No active listings matching',
-    orMonthlyBnpl: 'Or ${amount}/mo BNPL',
+    orMonthlyBnpl: 'Or {amount}/mo BNPL',
 
     // Hero Section
     heroBadge: 'Introducing Rivers Flow 0% APR Installment Split',
@@ -59,7 +59,7 @@ export const translations = {
     noListingsDesc: "We couldn't find any items matching your current filters or search terms.",
     resetAllFilters: 'Reset All Filters',
     escrowVerified: 'Escrow Verified',
-    orWithRiversFlow: 'Or ${amount}/mo with Rivers Flow',
+    orWithRiversFlow: 'Or {amount}/mo with Rivers Flow',
     listingPrice: 'Listing Price',
     viewsCount: '{count} views',
 
@@ -68,7 +68,7 @@ export const translations = {
     fullEscrowPrice: 'Full Escrow Purchase Price',
     riversFlowFinance: 'Rivers Flow Finance',
     zeroAprInstallments: '0% APR Installments',
-    bnplSplitPreview: 'Or 4 interest-free payments of ${amount} with Rivers Flow',
+    bnplSplitPreview: 'Or 4 interest-free payments of {amount} with Rivers Flow',
     bnplDescText: 'Pay 25% today. Remaining 3 payments bi-weekly with zero fees or credit impact.',
     today: 'Today',
     weeks2: '2 Weeks',
@@ -80,7 +80,7 @@ export const translations = {
     directSellerChannel: 'Direct Seller Encrypted Channel',
     chatPlaceholder: 'Ask seller about shipping or condition...',
     sendBtn: 'Send',
-    buyNowEscrow: 'Buy Now with Escrow (${price})',
+    buyNowEscrow: 'Buy Now with Escrow ({price})',
 
     // Listing Creator Modal
     createListingTitle: 'Create Rivers P2P Listing',
@@ -106,7 +106,7 @@ export const translations = {
     imageUrlPlaceholder: 'Or paste image URL (e.g. Unsplash URL)...',
     addImageBtn: 'Add Image',
     coverBadge: 'Cover',
-    askingPriceLabel: 'Asking Price ($ USD) *',
+    askingPriceLabel: 'Asking Price (EGP) *',
     locationLabel: 'Location City / District',
     enableBnpl: 'Enable Rivers Flow BNPL',
     enableBnplDesc: 'Buyers can split payments into 4 installments. You get paid 100% upfront in Escrow.',
@@ -129,13 +129,13 @@ export const translations = {
     payment3: 'Payment 3',
     payment4: 'Payment 4',
     dueRightNow: 'Due Right Now',
-    selectPaymentSource: 'Select Payment Method for First Payment (${amount})',
+    selectPaymentSource: 'Select Payment Method for First Payment ({amount})',
     escrowWalletOption: 'Rivers Escrow Wallet',
-    walletBalanceLabel: 'Balance: ${amount}',
+    walletBalanceLabel: 'Balance: {amount}',
     savedCardOption: 'Saved Visa •••• 4892',
     instantAuthLabel: 'Instant Auth',
     buyerProtectionActive: 'Buyer Protection Active: Seller receives funds only after delivery confirmation.',
-    confirmPayFirstInstallment: 'Confirm & Pay ${amount} First Installment',
+    confirmPayFirstInstallment: 'Confirm & Pay {amount} First Installment',
 
     // Admin Dashboard View
     telemetryConsole: 'Real-Time Telemetry Console',
@@ -213,7 +213,7 @@ export const translations = {
     matchesLabel: 'النتائج',
     predictiveAi: 'ذكاء اصطناعي تنبؤي فوري',
     noMatchingListings: 'لا توجد إعلانات نشطة تطابق',
-    orMonthlyBnpl: 'أو ${amount}/شهرياً بالتقسيط',
+    orMonthlyBnpl: 'أو {amount}/شهرياً بالتقسيط',
 
     // Hero Section
     heroBadge: 'نقدم بروتوكول تقسيط ريفرز فلو بفائدة 0%',
@@ -260,7 +260,7 @@ export const translations = {
     noListingsDesc: 'لم نتمكن من العثور على أي منتجات تطابق خيارات التصفية أو البحث الحالية.',
     resetAllFilters: 'إعادة ضبط كافة الفلاتر',
     escrowVerified: 'موثق بالضمان',
-    orWithRiversFlow: 'أو ${amount}/شهرياً عبر ريفرز فلو',
+    orWithRiversFlow: 'أو {amount}/شهرياً عبر ريفرز فلو',
     listingPrice: 'سعر المنتج',
     viewsCount: '{count} مشاهدة',
 
@@ -269,7 +269,7 @@ export const translations = {
     fullEscrowPrice: 'السعر الإجمالي بضمان المنصة',
     riversFlowFinance: 'تقسيط ريفرز فلو',
     zeroAprInstallments: 'أقساط بفائدة 0%',
-    bnplSplitPreview: 'أو 4 دفعات متساوية بقيمة ${amount} بدون فوائد',
+    bnplSplitPreview: 'أو 4 دفعات متساوية بقيمة {amount} بدون فوائد',
     bnplDescText: 'ادفع 25% اليوم. والدفعات الـ3 المتبقية كل أسبوعين بدون أي رسوم إضافية.',
     today: 'اليوم',
     weeks2: 'بعد أسبوعين',
@@ -281,7 +281,7 @@ export const translations = {
     directSellerChannel: 'قناة تواصل مشفرة مباشرة مع البائع',
     chatPlaceholder: 'اسأل البائع عن حالة المنتج أو تفاصيل الشحن...',
     sendBtn: 'إرسال',
-    buyNowEscrow: 'شراء الآن بالضمان (${price})',
+    buyNowEscrow: 'شراء الآن بالضمان ({price})',
 
     // Listing Creator Modal
     createListingTitle: 'إضافة إعلان تداول جديد',
@@ -307,7 +307,7 @@ export const translations = {
     imageUrlPlaceholder: 'أو الصق رابط الصورة مباشر...',
     addImageBtn: 'إضافة صورة',
     coverBadge: 'الرئيسية',
-    askingPriceLabel: 'السعر المطلوب ($ دولار) *',
+    askingPriceLabel: 'السعر المطلوب (ج.م) *',
     locationLabel: 'المدينة / المنطقة',
     enableBnpl: 'تفعيل تقسيط ريفرز فلو للمشتري',
     enableBnplDesc: 'يمكن للمشتري تقسيم المبلغ على 4 دفعات. وتحصل أنت كبائع على 100% من حقك فوراً بالضمان.',
@@ -330,13 +330,13 @@ export const translations = {
     payment3: 'الدفعة الثالثة',
     payment4: 'الدفعة الرابعة',
     dueRightNow: 'مستحقة الآن',
-    selectPaymentSource: 'اختر طريقة دفع الدفعة الأولى (${amount})',
+    selectPaymentSource: 'اختر طريقة دفع الدفعة الأولى ({amount})',
     escrowWalletOption: 'محفظة ريفرز الضامنة',
-    walletBalanceLabel: 'الرصيد: ${amount}',
+    walletBalanceLabel: 'الرصيد: {amount}',
     savedCardOption: 'بطاقة فيزا المسجلة •••• 4892',
     instantAuthLabel: 'خصم فوري',
     buyerProtectionActive: 'حماية المشتري مفعلة: يتسلم البائع المبلغ فقط بعد تأكيدك لاستلام المنتج.',
-    confirmPayFirstInstallment: 'تأكيد ودفع الدفعة الأولى بقيمة ${amount}',
+    confirmPayFirstInstallment: 'تأكيد ودفع الدفعة الأولى بقيمة {amount}',
 
     // Admin Dashboard View
     telemetryConsole: 'لوحة القيادة والمراقبة الحية',

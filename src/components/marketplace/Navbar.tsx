@@ -29,6 +29,7 @@ export const Navbar: React.FC = () => {
     language,
     setLanguage,
     numLocale,
+    formatPrice,
     t,
   } = useRiversStore();
 
@@ -190,10 +191,10 @@ export const Navbar: React.FC = () => {
                         </div>
                         <div className="text-right">
                           <span className="text-xs font-mono font-bold text-cyan-400 block">
-                            ج.م {item.price.toLocaleString(numLocale)}
+                            {formatPrice(item.price)}
                           </span>
                           <span className="text-[9px] text-slate-500">
-                            {t('orMonthlyBnpl', { amount: (item.price / 4).toFixed(0) })}
+                            {t('orMonthlyBnpl', { amount: formatPrice(Math.round(item.price / 4)) })}
                           </span>
                         </div>
                       </div>
@@ -236,7 +237,7 @@ export const Navbar: React.FC = () => {
             <Wallet className="w-4 h-4 text-cyan-400" />
             <div className="text-right font-mono">
               <span className="text-[10px] block text-slate-400 leading-none">{t('escrowBalance')}</span>
-              <span className="font-bold text-cyan-300">ج.م {userBalance.toLocaleString(numLocale)}</span>
+              <span className="font-bold text-cyan-300">{formatPrice(userBalance)}</span>
             </div>
           </div>
 

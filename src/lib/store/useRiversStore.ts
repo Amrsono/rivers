@@ -16,7 +16,9 @@ interface RiversStoreState {
   // i18n Language & Direction
   language: Language;
   setLanguage: (lang: Language) => void;
-  numLocale: string; // 'en-US' or 'ar-EG' — drives all number formatting
+  numLocale: string;
+  formatNumber: (amount: number) => string;
+  formatPrice: (amount: number, compact?: boolean) => string;
   t: (key: keyof typeof translations['en'], params?: Record<string, string | number>) => string;
 
   // Navigation & View State
@@ -66,6 +68,33 @@ interface RiversStoreState {
 export const useRiversStore = create<RiversStoreState>((set, get) => ({
   language: 'en',
   numLocale: 'en-US',
+  formatNumber: (amount) => {
+    const lang = get().language;
+    const locale = lang === 'ar' ? 'ar-EG' : 'en-US';
+    return new Intl.NumberFormat(locale).format(amount);
+  },
+  formatPrice: (amount, compact = false) => {
+    const lang = get().language;
+    const locale = lang === 'ar' ? 'ar-EG' : 'en-US';
+
+    if (compact) {
+      if (amount >= 1_000_000_000) {
+        const val = new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(amount / 1_000_000_000);
+        return lang === 'ar' ? `${val} مليار ج.م` : `EGP ${val}B`;
+      }
+      if (amount >= 1_000_000) {
+        const val = new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(amount / 1_000_000);
+        return lang === 'ar' ? `${val} مليون ج.م` : `EGP ${val}M`;
+      }
+      if (amount >= 1_000) {
+        const val = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(amount / 1_000);
+        return lang === 'ar' ? `${val}K ج.م` : `EGP ${val}K`;
+      }
+    }
+
+    const formattedNum = new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(amount);
+    return lang === 'ar' ? `${formattedNum} ج.م` : `EGP ${formattedNum}`;
+  },
   setLanguage: (lang) => {
     set({ language: lang, numLocale: lang === 'ar' ? 'ar-EG' : 'en-US' });
     if (typeof document !== 'undefined') {

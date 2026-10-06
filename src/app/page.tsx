@@ -20,7 +20,7 @@ import {
 import { motion } from 'framer-motion';
 
 export default function Home() {
-  const { activeView, setActiveView, openListingCreator, t } = useRiversStore();
+  const { activeView, setActiveView, openListingCreator, t, formatPrice } = useRiversStore();
 
   return (
     <div className="min-h-screen flex flex-col justify-between">
@@ -100,7 +100,7 @@ export default function Home() {
               className="inline-grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8 p-4 px-8 rounded-2xl bg-slate-950/60 border border-slate-800/80 backdrop-blur-xl shadow-2xl font-mono text-xs text-slate-300"
             >
               <div className="text-center">
-                <span className="block text-lg font-bold text-cyan-400">$4.29M+</span>
+                <span className="block text-lg font-bold text-cyan-400">{formatPrice(214790000, true)}+</span>
                 <span className="text-[10px] text-slate-500 uppercase">{t('heroGmvMetric')}</span>
               </div>
               <div className="text-center">

@@ -25,6 +25,8 @@ export const ListingsGrid: React.FC = () => {
     setActiveFilterTab,
     openListingDetail,
     numLocale,
+    formatPrice,
+    formatNumber,
     t,
   } = useRiversStore();
 
@@ -83,7 +85,7 @@ export const ListingsGrid: React.FC = () => {
         {/* Counter Info */}
         <div className="flex items-center gap-3 text-xs font-mono text-slate-400">
           <span>
-            {t('showingVerifiedListings', { count: filteredListings.length })}
+            {t('showingVerifiedListings', { count: formatNumber(filteredListings.length) })}
           </span>
         </div>
       </div>
@@ -110,7 +112,7 @@ export const ListingsGrid: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <AnimatePresence mode="popLayout">
             {filteredListings.map((item) => {
-              const bnplMonthly = (item.price / 4).toFixed(0);
+              const bnplMonthly = formatPrice(Math.round(item.price / 4));
               return (
                 <motion.div
                   key={item.id}
@@ -171,7 +173,7 @@ export const ListingsGrid: React.FC = () => {
                           <span>•</span>
                           <span className="flex items-center gap-1">
                             <Eye className="w-3.5 h-3.5 text-slate-500" />
-                            {t('viewsCount', { count: item.viewCount })}
+                            {t('viewsCount', { count: formatNumber(item.viewCount) })}
                           </span>
                         </div>
                       </div>
@@ -183,7 +185,7 @@ export const ListingsGrid: React.FC = () => {
                             {t('listingPrice')}
                           </span>
                           <span className="text-xl font-extrabold font-mono text-slate-100 group-hover:text-cyan-400 transition-colors">
-                            ج.م {item.price.toLocaleString(numLocale)}
+                            {formatPrice(item.price)}
                           </span>
                         </div>
 

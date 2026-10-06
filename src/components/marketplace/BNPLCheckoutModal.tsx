@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 
 export const BNPLCheckoutModal: React.FC = () => {
-  const { activeBNPLCheckout, closeBNPLCheckout, addNotification, userBalance, t, numLocale } =
+  const { activeBNPLCheckout, closeBNPLCheckout, addNotification, userBalance, t, numLocale, formatPrice } =
     useRiversStore();
 
   const [paymentMethod, setPaymentMethod] = useState<'wallet' | 'card'>('wallet');
@@ -24,12 +24,12 @@ export const BNPLCheckoutModal: React.FC = () => {
 
   const item = activeBNPLCheckout;
   const totalPrice = item.price;
-  const installmentAmount = Number((totalPrice / 4).toFixed(2));
+  const installmentAmount = Math.round(totalPrice / 4);
 
   // Date calculation helper
   const today = new Date();
   const formatShortDate = (d: Date) =>
-    d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    d.toLocaleDateString(numLocale, { month: 'short', day: 'numeric', year: 'numeric' });
 
   const date2 = new Date(today);
   date2.setDate(today.getDate() + 14);
@@ -52,7 +52,7 @@ export const BNPLCheckoutModal: React.FC = () => {
     setTimeout(() => {
       setIsProcessing(false);
       closeBNPLCheckout();
-      const msg = t('bnplActivatedSuccess', { amount: installmentAmount });
+      const msg = t('bnplActivatedSuccess', { amount: formatPrice(installmentAmount) });
       addNotification('success', msg);
     }, 1200);
   };
@@ -76,7 +76,7 @@ export const BNPLCheckoutModal: React.FC = () => {
           <div className="flex-1">
             <h4 className="text-sm font-bold text-slate-100 line-clamp-1">{item.title}</h4>
             <span className="text-xs font-mono text-slate-400">
-              {t('totalPriceLabel')} <strong className="text-cyan-400 font-bold">ج.م {totalPrice.toLocaleString(numLocale)} EGP</strong>
+              {t('totalPriceLabel')} <strong className="text-cyan-400 font-bold">{formatPrice(totalPrice)}</strong>
             </span>
           </div>
           <Badge variant="neon" size="sm">
@@ -114,7 +114,7 @@ export const BNPLCheckoutModal: React.FC = () => {
                   </div>
                 </div>
                 <div className="ltr:text-right rtl:text-left">
-                  <span className="text-sm font-mono font-extrabold">ج.م{item.amount.toLocaleString(numLocale)}</span>
+                  <span className="text-sm font-mono font-extrabold">{formatPrice(item.amount)}</span>
                   {item.isToday && (
                     <span className="block text-[9px] font-mono text-cyan-400 font-bold">
                       {t('dueRightNow')}
@@ -129,7 +129,7 @@ export const BNPLCheckoutModal: React.FC = () => {
         {/* Payment Source Selection */}
         <div>
           <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-2 font-semibold">
-            {t('selectPaymentSource', { amount: installmentAmount })}
+            {t('selectPaymentSource', { amount: formatPrice(installmentAmount) })}
           </label>
           <div className="grid grid-cols-2 gap-3">
             <button
@@ -144,7 +144,7 @@ export const BNPLCheckoutModal: React.FC = () => {
               <div>
                 <span className="text-xs font-bold block text-slate-200">{t('escrowWalletOption')}</span>
                 <span className="text-[10px] font-mono text-slate-400">
-                  {t('walletBalanceLabel', { amount: userBalance.toLocaleString() })}
+                  {t('walletBalanceLabel', { amount: formatPrice(userBalance) })}
                 </span>
               </div>
             </button>
@@ -181,7 +181,7 @@ export const BNPLCheckoutModal: React.FC = () => {
           className="w-full"
           leftIcon={<Zap className="w-4 h-4 fill-slate-950" />}
         >
-          {t('confirmPayFirstInstallment', { amount: installmentAmount })}
+          {t('confirmPayFirstInstallment', { amount: formatPrice(installmentAmount) })}
         </Button>
       </div>
     </Modal>

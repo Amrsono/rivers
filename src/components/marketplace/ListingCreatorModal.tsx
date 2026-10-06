@@ -324,7 +324,7 @@ const AIAssistBar: React.FC<AIAssistBarProps> = ({ modes, loadingMode, onTrigger
 
 // ── Main Component ─────────────────────────────────────────────────────────
 export const ListingCreatorModal: React.FC = () => {
-  const { isListingCreatorOpen, closeListingCreator, addListing, currentUser, t, language, numLocale } =
+  const { isListingCreatorOpen, closeListingCreator, addListing, currentUser, t, language, numLocale, formatPrice } =
     useRiversStore();
 
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4>(1);
@@ -750,8 +750,8 @@ export const ListingCreatorModal: React.FC = () => {
                 {t('askingPriceLabel')}
               </label>
               <div className="relative">
-                <span className="absolute ltr:left-3.5 rtl:right-3.5 top-1/2 -translate-y-1/2 font-mono text-cyan-400 font-bold">
-                  ج.م
+                <span className="absolute ltr:left-3.5 rtl:right-3.5 top-1/2 -translate-y-1/2 font-mono text-cyan-400 font-bold text-xs">
+                  {language === 'ar' ? 'ج.م' : 'EGP'}
                 </span>
                 <input
                   type="number"
@@ -888,7 +888,7 @@ export const ListingCreatorModal: React.FC = () => {
               <p className="text-xs text-slate-400 line-clamp-2 mb-3">{formData.description}</p>
               <div className="flex items-center justify-between pt-2 border-t border-slate-900">
                 <span className="text-xl font-extrabold font-mono text-cyan-400">
-                  ج.م {formData.price.toLocaleString(numLocale)}
+                  {formatPrice(formData.price)}
                 </span>
                 <span className="text-xs font-mono text-slate-500">{formData.location}</span>
               </div>

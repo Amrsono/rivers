@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 
 export const ListingDetailModal: React.FC = () => {
-  const { activeListingDetail, closeListingDetail, openBNPLCheckout, addNotification, t, language, numLocale } =
+  const { activeListingDetail, closeListingDetail, openBNPLCheckout, addNotification, t, language, numLocale, formatPrice, formatNumber } =
     useRiversStore();
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -33,7 +33,7 @@ export const ListingDetailModal: React.FC = () => {
 
   const item = activeListingDetail;
   const currentImage = item.images[selectedImageIndex] || item.images[0];
-  const installment4 = (item.price / 4).toFixed(2);
+  const installment4 = Math.round(item.price / 4);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -154,7 +154,7 @@ export const ListingDetailModal: React.FC = () => {
               <span>•</span>
               <span className="flex items-center gap-1">
                 <Eye className="w-3.5 h-3.5 text-slate-500" />
-                {t('viewsCount', { count: item.viewCount })}
+                {t('viewsCount', { count: formatNumber(item.viewCount) })}
               </span>
             </div>
 
@@ -165,9 +165,8 @@ export const ListingDetailModal: React.FC = () => {
               </span>
               <div className="flex items-baseline gap-2">
                 <span className="text-3xl font-extrabold font-mono text-slate-100">
-                  ج.م {item.price.toLocaleString(numLocale)}
+                  {formatPrice(item.price)}
                 </span>
-                <span className="text-xs font-mono text-cyan-400">EGP</span>
               </div>
             </div>
 
@@ -193,7 +192,7 @@ export const ListingDetailModal: React.FC = () => {
               {/* Installment Split Preview */}
               <div className="mb-4">
                 <p className="text-sm font-semibold text-slate-200">
-                  {t('bnplSplitPreview', { amount: installment4 })}
+                  {t('bnplSplitPreview', { amount: formatPrice(installment4) })}
                 </p>
                 <p className="text-[11px] text-slate-400 mt-1">
                   {t('bnplDescText')}
@@ -204,19 +203,19 @@ export const ListingDetailModal: React.FC = () => {
               <div className="grid grid-cols-4 gap-1.5 pt-3 border-t border-cyan-500/20">
                 <div className="text-center p-2 rounded-xl bg-cyan-950/60 border border-cyan-500/30">
                   <span className="block text-[9px] font-mono text-cyan-400 font-bold">{t('today')}</span>
-                  <span className="text-xs font-mono font-extrabold text-slate-100">ج.م{parseFloat(installment4).toLocaleString(numLocale)}</span>
+                  <span className="text-xs font-mono font-extrabold text-slate-100">{formatPrice(installment4)}</span>
                 </div>
                 <div className="text-center p-2 rounded-xl bg-slate-900/60 border border-slate-800">
                   <span className="block text-[9px] font-mono text-slate-500">{t('weeks2')}</span>
-                  <span className="text-xs font-mono text-slate-300">ج.م{parseFloat(installment4).toLocaleString(numLocale)}</span>
+                  <span className="text-xs font-mono text-slate-300">{formatPrice(installment4)}</span>
                 </div>
                 <div className="text-center p-2 rounded-xl bg-slate-900/60 border border-slate-800">
                   <span className="block text-[9px] font-mono text-slate-500">{t('weeks4')}</span>
-                  <span className="text-xs font-mono text-slate-300">ج.م{parseFloat(installment4).toLocaleString(numLocale)}</span>
+                  <span className="text-xs font-mono text-slate-300">{formatPrice(installment4)}</span>
                 </div>
                 <div className="text-center p-2 rounded-xl bg-slate-900/60 border border-slate-800">
                   <span className="block text-[9px] font-mono text-slate-500">{t('weeks6')}</span>
-                  <span className="text-xs font-mono text-slate-300">ج.م{parseFloat(installment4).toLocaleString(numLocale)}</span>
+                  <span className="text-xs font-mono text-slate-300">{formatPrice(installment4)}</span>
                 </div>
               </div>
 
@@ -312,7 +311,7 @@ export const ListingDetailModal: React.FC = () => {
               className="w-full"
               leftIcon={<Lock className="w-4 h-4" />}
             >
-              {t('buyNowEscrow', { price: item.price.toLocaleString() })}
+              {t('buyNowEscrow', { price: formatPrice(item.price) })}
             </Button>
           </div>
         </div>
