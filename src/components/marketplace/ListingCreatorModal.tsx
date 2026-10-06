@@ -360,9 +360,14 @@ export const ListingCreatorModal: React.FC = () => {
       setAiResult(null);
       try {
         const selectedCat = MOCK_CATEGORIES.find((c) => c.id === formData.categoryId);
+        const dynamicKey = localStorage.getItem('rivers_gemini_key') || '';
+        
         const res = await fetch('/api/ai/enhance-listing', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'x-gemini-key': dynamicKey 
+          },
           body: JSON.stringify({
             mode,
             title: formData.title,

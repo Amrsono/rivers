@@ -32,6 +32,15 @@ export const AdminDashboardView: React.FC = () => {
   const [isConfigured, setIsConfigured] = useState(false);
 
   React.useEffect(() => {
+    // Check if key exists in local storage first
+    const localKey = localStorage.getItem('rivers_gemini_key');
+    if (localKey) {
+      setIsConfigured(true);
+      setGeminiKey(localKey);
+      return;
+    }
+
+    // Otherwise check server environment
     fetch('/api/ai/status')
       .then((res) => res.json())
       .then((data) => {
@@ -44,8 +53,10 @@ export const AdminDashboardView: React.FC = () => {
   }, []);
 
   const handleSaveKey = () => {
-    // Placeholder: in production, POST to /api/admin/settings with the key
-    setIsConfigured(true);
+    if (geminiKey.trim()) {
+      localStorage.setItem('rivers_gemini_key', geminiKey.trim());
+      setIsConfigured(true);
+    }
   };
 
   const metrics = [

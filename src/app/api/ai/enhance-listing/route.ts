@@ -47,14 +47,12 @@ interface AIEnhanceResponse {
 // ── Gemini Integration ─────────────────────────────────────────────────────
 // To activate AI features, set GEMINI_API_KEY in your .env.local file.
 // Get your key at: https://aistudio.google.com/app/apikey
-// ─────────────────────────────────────────────────────────────────────────
-
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GEMINI_MODEL = 'gemini-2.0-flash-exp';
-const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
 
-async function callGemini(prompt: string): Promise<string> {
-  const response = await fetch(GEMINI_ENDPOINT, {
+async function callGemini(prompt: string, apiKey: string): Promise<string> {
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
+
+  const response = await fetch(endpoint, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -136,8 +134,12 @@ export async function POST(req: NextRequest): Promise<NextResponse<AIEnhanceResp
       return NextResponse.json({ success: false, error: 'Missing required field: mode' }, { status: 400 });
     }
 
-    // If no Gemini API key is configured, use intelligent mock data
-    if (!GEMINI_API_KEY) {
+    // Try client-provided key first, then fall back to server env
+    const clientKey = req.headers.get('x-gemini-key');
+    const activeKey = clientKey || process.env.GEMINI_API_KEY;
+
+    // If no key is available anywhere, use intelligent mock data
+    if (!activeKey) {
       const mockData = getMockResponse(body);
       return NextResponse.json({ success: true, data: mockData });
     }
@@ -200,7 +202,7 @@ Return JSON: { "score": number, "scoreBreakdown": [{ "label": "...", "score": nu
         break;
     }
 
-    const raw = await callGemini(prompt);
+    const raw = await callGemini(prompt, activeKey);
     const parsed = JSON.parse(raw);
 
     return NextResponse.json({ success: true, data: parsed });
