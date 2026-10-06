@@ -122,7 +122,7 @@ export const useRiversStore = create<RiversStoreState>((set, get) => ({
   closeBNPLCheckout: () => set({ activeBNPLCheckout: null }),
 
   currentUser: MOCK_USERS.usr_1,
-  userBalance: 12450.0,
+  userBalance: 622500.0,
 
   adminAnalytics: INITIAL_ADMIN_ANALYTICS,
   approveVerification: (id) => {

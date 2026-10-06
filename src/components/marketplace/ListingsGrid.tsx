@@ -182,7 +182,7 @@ export const ListingsGrid: React.FC = () => {
                             {t('listingPrice')}
                           </span>
                           <span className="text-xl font-extrabold font-mono text-slate-100 group-hover:text-cyan-400 transition-colors">
-                            ${item.price.toLocaleString()}
+                            ج.م {item.price.toLocaleString()}
                           </span>
                         </div>
 

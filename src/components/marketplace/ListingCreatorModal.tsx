@@ -116,15 +116,15 @@ const AIResultPanel: React.FC<AIResultPanelProps> = ({ result, onApply, onDismis
         <div>
           <p className="text-xs text-slate-400 mb-2">{t('aiPriceRangeLabel')}</p>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono text-slate-500">${result.priceMin?.toLocaleString()}</span>
+            <span className="text-xs font-mono text-slate-500">ج.م {result.priceMin?.toLocaleString()}</span>
             <div className="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
               <div className="h-full bg-gradient-to-r from-cyan-600 to-violet-500 rounded-full" style={{ width: '60%' }} />
             </div>
-            <span className="text-xs font-mono text-slate-500">${result.priceMax?.toLocaleString()}</span>
+            <span className="text-xs font-mono text-slate-500">ج.م {result.priceMax?.toLocaleString()}</span>
           </div>
           <div className="mt-2 text-center">
             <span className="text-lg font-extrabold font-mono text-cyan-400">
-              ${result.priceSuggested?.toLocaleString()}
+              ج.م {result.priceSuggested?.toLocaleString()}
             </span>
             <span className="text-xs text-slate-500 ml-1">suggested</span>
           </div>
@@ -333,7 +333,7 @@ export const ListingCreatorModal: React.FC = () => {
     title: '',
     description: '',
     price: 0,
-    currency: 'USD',
+    currency: 'EGP',
     condition: 'LIKE_NEW',
     categoryId: MOCK_CATEGORIES[0].id,
     location: currentUser.location,
@@ -458,7 +458,7 @@ export const ListingCreatorModal: React.FC = () => {
       }
     } else if (currentStep === 3) {
       if (!formData.price || formData.price <= 0) {
-        setValidationErrors({ price: 'Price must be greater than $0.' });
+        setValidationErrors({ price: 'Price must be greater than 0 EGP.' });
         return;
       }
     }
@@ -749,7 +749,7 @@ export const ListingCreatorModal: React.FC = () => {
               </label>
               <div className="relative">
                 <span className="absolute ltr:left-3.5 rtl:right-3.5 top-1/2 -translate-y-1/2 font-mono text-cyan-400 font-bold">
-                  $
+                  ج.م
                 </span>
                 <input
                   type="number"
@@ -886,7 +886,7 @@ export const ListingCreatorModal: React.FC = () => {
               <p className="text-xs text-slate-400 line-clamp-2 mb-3">{formData.description}</p>
               <div className="flex items-center justify-between pt-2 border-t border-slate-900">
                 <span className="text-xl font-extrabold font-mono text-cyan-400">
-                  ${formData.price.toLocaleString()}
+                  ج.م {formData.price.toLocaleString()}
                 </span>
                 <span className="text-xs font-mono text-slate-500">{formData.location}</span>
               </div>

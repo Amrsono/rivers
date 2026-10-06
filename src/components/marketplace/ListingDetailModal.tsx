@@ -165,9 +165,9 @@ export const ListingDetailModal: React.FC = () => {
               </span>
               <div className="flex items-baseline gap-2">
                 <span className="text-3xl font-extrabold font-mono text-slate-100">
-                  ${item.price.toLocaleString()}
+                  ج.م {item.price.toLocaleString()}
                 </span>
-                <span className="text-xs font-mono text-cyan-400">USD</span>
+                <span className="text-xs font-mono text-cyan-400">EGP</span>
               </div>
             </div>
 
@@ -204,19 +204,19 @@ export const ListingDetailModal: React.FC = () => {
               <div className="grid grid-cols-4 gap-1.5 pt-3 border-t border-cyan-500/20">
                 <div className="text-center p-2 rounded-xl bg-cyan-950/60 border border-cyan-500/30">
                   <span className="block text-[9px] font-mono text-cyan-400 font-bold">{t('today')}</span>
-                  <span className="text-xs font-mono font-extrabold text-slate-100">${installment4}</span>
+                  <span className="text-xs font-mono font-extrabold text-slate-100">ج.م{installment4}</span>
                 </div>
                 <div className="text-center p-2 rounded-xl bg-slate-900/60 border border-slate-800">
                   <span className="block text-[9px] font-mono text-slate-500">{t('weeks2')}</span>
-                  <span className="text-xs font-mono text-slate-300">${installment4}</span>
+                  <span className="text-xs font-mono text-slate-300">ج.م{installment4}</span>
                 </div>
                 <div className="text-center p-2 rounded-xl bg-slate-900/60 border border-slate-800">
                   <span className="block text-[9px] font-mono text-slate-500">{t('weeks4')}</span>
-                  <span className="text-xs font-mono text-slate-300">${installment4}</span>
+                  <span className="text-xs font-mono text-slate-300">ج.م{installment4}</span>
                 </div>
                 <div className="text-center p-2 rounded-xl bg-slate-900/60 border border-slate-800">
                   <span className="block text-[9px] font-mono text-slate-500">{t('weeks6')}</span>
-                  <span className="text-xs font-mono text-slate-300">${installment4}</span>
+                  <span className="text-xs font-mono text-slate-300">ج.م{installment4}</span>
                 </div>
               </div>
 

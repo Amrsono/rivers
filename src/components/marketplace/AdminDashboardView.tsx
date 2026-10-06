@@ -69,21 +69,21 @@ export const AdminDashboardView: React.FC = () => {
     },
     {
       label: t('totalMarketplaceGmv'),
-      value: `$${(adminAnalytics.totalMarketplaceGmv / 1000000).toFixed(2)}M`,
+      value: `ج.م ${(adminAnalytics.totalMarketplaceGmv / 1000000).toFixed(2)}M`,
       change: `+${adminAnalytics.gmvGrowthPercent}% growth rate`,
       icon: <TrendingUp className="w-5 h-5 text-emerald-400" />,
       glow: 'from-emerald-500/20 to-teal-500/10',
     },
     {
       label: t('activeEscrowVolume'),
-      value: `$${(adminAnalytics.escrowVolume / 1000000).toFixed(2)}M`,
+      value: `ج.م ${(adminAnalytics.escrowVolume / 1000000).toFixed(2)}M`,
       change: 'Protected by Smart Escrow',
       icon: <DollarSign className="w-5 h-5 text-amber-400" />,
       glow: 'from-amber-500/20 to-orange-500/10',
     },
     {
       label: t('riversFlowBnplVolume'),
-      value: `$${(adminAnalytics.bnplFinancedVolume / 1000000).toFixed(2)}M`,
+      value: `ج.م ${(adminAnalytics.bnplFinancedVolume / 1000000).toFixed(2)}M`,
       change: '0% Default rate',
       icon: <Zap className="w-5 h-5 text-purple-400" />,
       glow: 'from-purple-500/20 to-indigo-500/10',
@@ -193,12 +193,12 @@ export const AdminDashboardView: React.FC = () => {
               <div key={idx} className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs font-mono">
                   <span className="text-slate-300 font-semibold">{cat.category}</span>
-                  <span className="text-cyan-400 font-bold">${(cat.value / 1000).toFixed(0)}k</span>
+                  <span className="text-cyan-400 font-bold">ج.م{(cat.value / 1000).toFixed(0)}k</span>
                 </div>
                 <div className="w-full h-2 rounded-full bg-slate-900 overflow-hidden">
                   <div
                     className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full"
-                    style={{ width: `${Math.min(100, (cat.value / 1680000) * 100)}%` }}
+                    style={{ width: `${Math.min(100, (cat.value / 84000000) * 100)}%` }}
                   />
                 </div>
               </div>

@@ -189,7 +189,7 @@ export const Navbar: React.FC = () => {
                         </div>
                         <div className="text-right">
                           <span className="text-xs font-mono font-bold text-cyan-400 block">
-                            ${item.price.toLocaleString()}
+                            ج.م {item.price.toLocaleString()}
                           </span>
                           <span className="text-[9px] text-slate-500">
                             {t('orMonthlyBnpl', { amount: (item.price / 4).toFixed(0) })}
@@ -235,7 +235,7 @@ export const Navbar: React.FC = () => {
             <Wallet className="w-4 h-4 text-cyan-400" />
             <div className="text-right font-mono">
               <span className="text-[10px] block text-slate-400 leading-none">{t('escrowBalance')}</span>
-              <span className="font-bold text-cyan-300">${userBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+              <span className="font-bold text-cyan-300">ج.م {userBalance.toLocaleString('ar-EG')}</span>
             </div>
           </div>
 

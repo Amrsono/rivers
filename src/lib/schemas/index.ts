@@ -16,7 +16,7 @@ export const listingFormSchema = z.object({
   price: z
     .number()
     .positive({ message: 'Price must be greater than zero' }),
-  currency: z.string().default('USD'),
+  currency: z.string().default('EGP'),
   condition: ItemConditionEnum,
   categoryId: z.string().min(1, { message: 'Please select a category' }),
   location: z.string().min(3, { message: 'Location is required' }),
