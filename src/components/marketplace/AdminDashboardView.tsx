@@ -27,14 +27,25 @@ import { motion } from 'framer-motion';
 export const AdminDashboardView: React.FC = () => {
   const { adminAnalytics, approveVerification, rejectVerification, t } = useRiversStore();
 
-  // AI Settings local state (in a real app this would persist to a server setting)
+  // AI Settings local state
   const [geminiKey, setGeminiKey] = useState('');
-  const [keySaved, setKeySaved] = useState(false);
+  const [isConfigured, setIsConfigured] = useState(false);
+
+  React.useEffect(() => {
+    fetch('/api/ai/status')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.isGeminiConfigured) {
+          setIsConfigured(true);
+          setGeminiKey('••••••••••••••••••••••••••••••••');
+        }
+      })
+      .catch(console.error);
+  }, []);
 
   const handleSaveKey = () => {
     // Placeholder: in production, POST to /api/admin/settings with the key
-    setKeySaved(true);
-    setTimeout(() => setKeySaved(false), 3000);
+    setIsConfigured(true);
   };
 
   const metrics = [
@@ -262,11 +273,11 @@ export const AdminDashboardView: React.FC = () => {
             <p className="text-xs text-slate-400 mt-0.5">{t('aiSettingsSubtitle')}</p>
           </div>
           <div className="ml-auto flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs font-mono font-semibold"
-               style={keySaved
+               style={isConfigured
                  ? { borderColor: 'rgba(16,185,129,0.4)', color: '#34d399', background: 'rgba(6,78,59,0.3)' }
                  : { borderColor: 'rgba(100,116,139,0.3)', color: '#64748b', background: 'rgba(15,23,42,0.5)' }
                }>
-            {keySaved ? (
+            {isConfigured ? (
               <><CheckCheck className="w-3 h-3" /> {t('geminiApiKeyActive')}</>
             ) : (
               <><AlertTriangle className="w-3 h-3" /> {t('geminiApiKeyInactive')}</>
@@ -284,7 +295,7 @@ export const AdminDashboardView: React.FC = () => {
             <input
               type="password"
               value={geminiKey}
-              onChange={(e) => { setGeminiKey(e.target.value); setKeySaved(false); }}
+              onChange={(e) => { setGeminiKey(e.target.value); setIsConfigured(false); }}
               placeholder={t('geminiApiKeyPlaceholder')}
               className="flex-1 px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-100 text-sm font-mono focus:outline-none focus:border-violet-400 placeholder:text-slate-600"
             />
@@ -293,9 +304,9 @@ export const AdminDashboardView: React.FC = () => {
               disabled={!geminiKey.trim()}
               variant="secondary"
               size="md"
-              leftIcon={keySaved ? <CheckCheck className="w-4 h-4" /> : <Sparkles className="w-4 h-4" />}
+              leftIcon={isConfigured ? <CheckCheck className="w-4 h-4" /> : <Sparkles className="w-4 h-4" />}
             >
-              {keySaved ? 'Saved!' : t('geminiApiKeySave')}
+              {isConfigured ? 'Active' : t('geminiApiKeySave')}
             </Button>
           </div>
         </div>
@@ -316,7 +327,7 @@ export const AdminDashboardView: React.FC = () => {
             >
               <span>{f.icon}</span>
               <span>{f.label}</span>
-              {keySaved && <CheckCircle2 className="w-3 h-3 text-emerald-400 ml-auto shrink-0" />}
+              {isConfigured && <CheckCircle2 className="w-3 h-3 text-emerald-400 ml-auto shrink-0" />}
             </div>
           ))}
         </div>
