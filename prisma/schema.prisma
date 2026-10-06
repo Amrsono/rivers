@@ -1,0 +1,136 @@
+// Prisma Schema for Rivers Marketplace (2026 Standard)
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum ItemCondition {
+  NEW
+  LIKE_NEW
+  EXCELLENT
+  GOOD
+  FAIR
+}
+
+enum ListingStatus {
+  ACTIVE
+  RESERVED
+  SOLD
+  ARCHIVED
+}
+
+enum PaymentMethod {
+  ESCROW_P2P
+  RIVERS_FLOW_BNPL
+}
+
+enum OrderStatus {
+  PENDING
+  IN_ESCROW
+  COMPLETED
+  CANCELLED
+}
+
+enum BNPLStatus {
+  ACTIVE
+  COMPLETED
+  DEFAULTED
+}
+
+model User {
+  id               String              @id @default(uuid())
+  email            String              @unique
+  name             String
+  avatar           String?
+  rating           Float               @default(5.0)
+  isVerified       Boolean             @default(true)
+  trustScore       Int                 @default(98) // Out of 100
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  listings         Listing[]
+  orders           Order[]             @relation("BuyerOrders")
+  verifications    VerificationQueue[]
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  icon        String
+  description String?
+  listings    Listing[]
+}
+
+model Listing {
+  id                   String        @id @default(uuid())
+  title                String
+  description          String
+  price                Float
+  currency             String        @default("USD")
+  condition            ItemCondition @default(LIKE_NEW)
+  categoryId           String
+  category             Category      @relation(fields: [categoryId], references: [id])
+  images               String[]      // List of image URLs
+  location             String
+  sellerId             String
+  seller               User          @relation(fields: [sellerId], references: [id])
+  safetyBadge          Boolean       @default(true)
+  flowFinanceEligible  Boolean       @default(true)
+  status               ListingStatus @default(ACTIVE)
+  tags                 String[]
+  viewCount            Int           @default(0)
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+  orders               Order[]
+}
+
+model Order {
+  id            String        @id @default(uuid())
+  listingId     String
+  listing       Listing       @relation(fields: [listingId], references: [id])
+  buyerId       String
+  buyer         User          @relation("BuyerOrders", fields: [buyerId], references: [id])
+  totalAmount   Float
+  paymentMethod PaymentMethod @default(RIVERS_FLOW_BNPL)
+  status        OrderStatus   @default(IN_ESCROW)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  bnplPlan      BNPLPlan?
+}
+
+model BNPLPlan {
+  id                String     @id @default(uuid())
+  orderId           String     @unique
+  order             Order      @relation(fields: [orderId], references: [id])
+  totalAmount       Float
+  installmentCount  Int        @default(4)
+  installmentAmount Float
+  frequency         String     @default("BI_WEEKLY")
+  remainingBalance  Float
+  status            BNPLStatus @default(ACTIVE)
+  scheduleJson      String     // Serialized installment schedule details
+  createdAt         DateTime   @default(now())
+}
+
+model VerificationQueue {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  documentType String   // "ID_CARD", "PASSPORT", "BUSINESS_LICENSE"
+  status       String   @default("PENDING") // "PENDING", "APPROVED", "REJECTED"
+  submittedAt  DateTime @default(now())
+}
+
+model AdminMetric {
+  id                    String   @id @default(uuid())
+  activeListings        Int
+  totalMarketplaceGmv   Float
+  escrowVolume          Float
+  userVerificationCount Int
+  dailyTrafficCount     Int
+  updatedAt             DateTime @updatedAt
+}
