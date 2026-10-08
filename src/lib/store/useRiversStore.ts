@@ -1,10 +1,12 @@
 import { create } from 'zustand';
-import { Listing, Category, AdminAnalytics, User } from '../types';
+import { Listing, Category, AdminAnalytics, User, CountryCode } from '../types';
 import { INITIAL_LISTINGS, MOCK_CATEGORIES, INITIAL_ADMIN_ANALYTICS, MOCK_USERS } from '../mock-data';
+import { COUNTRIES } from '../constants/countries';
 import { Language, translations } from '../i18n/translations';
 
 export type FilterTab = 'all' | 'bnpl' | 'verified' | 'top_rated';
 export type ViewMode = 'discovery' | 'admin';
+export type MobileTab = 'home' | 'categories' | 'post' | 'messages' | 'account';
 
 interface ToastNotification {
   id: string;
@@ -21,17 +23,37 @@ interface RiversStoreState {
   formatPrice: (amount: number, compact?: boolean) => string;
   t: (key: keyof typeof translations['en'], params?: Record<string, string | number>) => string;
 
+  // Country & City Selection
+  selectedCountry: CountryCode;
+  setSelectedCountry: (country: CountryCode) => void;
+  selectedCity: string; // 'all' or city name
+  setSelectedCity: (city: string) => void;
+
   // Navigation & View State
   activeView: ViewMode;
   setActiveView: (view: ViewMode) => void;
+
+  mobileActiveTab: MobileTab;
+  setMobileActiveTab: (tab: MobileTab) => void;
 
   // Search & Category Filters
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   selectedCategory: string; // 'all' or category ID
   setSelectedCategory: (categoryId: string) => void;
+  selectedSubcategory: string;
+  setSelectedSubcategory: (subId: string) => void;
   activeFilterTab: FilterTab;
   setActiveFilterTab: (tab: FilterTab) => void;
+
+  // Saved / Favorited Listings
+  savedListingIds: string[];
+  toggleSaveListing: (id: string) => void;
+
+  // Seller Phone Reveal Modal
+  phoneRevealListing: Listing | null;
+  openPhoneRevealModal: (listing: Listing) => void;
+  closePhoneRevealModal: () => void;
 
   // Listings Data
   listings: Listing[];
@@ -75,25 +97,23 @@ export const useRiversStore = create<RiversStoreState>((set, get) => ({
   },
   formatPrice: (amount, compact = false) => {
     const lang = get().language;
+    const countryCode = get().selectedCountry || 'JO';
+    const currency = COUNTRIES[countryCode]?.currency || 'JOD';
     const locale = lang === 'ar' ? 'ar-EG' : 'en-US';
 
     if (compact) {
-      if (amount >= 1_000_000_000) {
-        const val = new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(amount / 1_000_000_000);
-        return lang === 'ar' ? `${val} مليار ج.م` : `EGP ${val}B`;
-      }
       if (amount >= 1_000_000) {
-        const val = new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(amount / 1_000_000);
-        return lang === 'ar' ? `${val} مليون ج.م` : `EGP ${val}M`;
+        const val = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(amount / 1_000_000);
+        return lang === 'ar' ? `${val} مليون ${currency}` : `${currency} ${val}M`;
       }
       if (amount >= 1_000) {
         const val = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(amount / 1_000);
-        return lang === 'ar' ? `${val}K ج.م` : `EGP ${val}K`;
+        return lang === 'ar' ? `${val} ألف ${currency}` : `${currency} ${val}K`;
       }
     }
 
     const formattedNum = new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(amount);
-    return lang === 'ar' ? `${formattedNum} ج.م` : `EGP ${formattedNum}`;
+    return lang === 'ar' ? `${formattedNum} ${currency}` : `${currency} ${formattedNum}`;
   },
   setLanguage: (lang) => {
     set({ language: lang, numLocale: lang === 'ar' ? 'ar-EG' : 'en-US' });
@@ -115,17 +135,46 @@ export const useRiversStore = create<RiversStoreState>((set, get) => ({
     return text;
   },
 
+  selectedCountry: 'JO',
+  setSelectedCountry: (country) => set({ selectedCountry: country, selectedCity: 'all' }),
+
+  selectedCity: 'all',
+  setSelectedCity: (city) => set({ selectedCity: city }),
+
   activeView: 'discovery',
   setActiveView: (view) => set({ activeView: view }),
+
+  mobileActiveTab: 'home',
+  setMobileActiveTab: (tab) => set({ mobileActiveTab: tab }),
 
   searchQuery: '',
   setSearchQuery: (query) => set({ searchQuery: query }),
 
   selectedCategory: 'all',
-  setSelectedCategory: (categoryId) => set({ selectedCategory: categoryId }),
+  setSelectedCategory: (categoryId) => set({ selectedCategory: categoryId, selectedSubcategory: 'all' }),
+
+  selectedSubcategory: 'all',
+  setSelectedSubcategory: (subId) => set({ selectedSubcategory: subId }),
 
   activeFilterTab: 'all',
   setActiveFilterTab: (tab) => set({ activeFilterTab: tab }),
+
+  savedListingIds: ['lst_101', 'lst_102'],
+  toggleSaveListing: (id) => {
+    set((state) => {
+      const exists = state.savedListingIds.includes(id);
+      const updated = exists
+        ? state.savedListingIds.filter((item) => item !== id)
+        : [...state.savedListingIds, id];
+      const msg = exists ? 'Removed from saved ads' : 'Saved to your favorites';
+      get().addNotification(exists ? 'info' : 'success', msg);
+      return { savedListingIds: updated };
+    });
+  },
+
+  phoneRevealListing: null,
+  openPhoneRevealModal: (listing) => set({ phoneRevealListing: listing }),
+  closePhoneRevealModal: () => set({ phoneRevealListing: null }),
 
   listings: INITIAL_LISTINGS,
   addListing: (newListing) => {
@@ -153,7 +202,7 @@ export const useRiversStore = create<RiversStoreState>((set, get) => ({
   closeBNPLCheckout: () => set({ activeBNPLCheckout: null }),
 
   currentUser: MOCK_USERS.usr_1,
-  userBalance: 622500.0,
+  userBalance: 62250.0,
 
   adminAnalytics: INITIAL_ADMIN_ANALYTICS,
   approveVerification: (id) => {

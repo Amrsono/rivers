@@ -126,8 +126,9 @@ function getMockResponse(body: AIEnhanceRequest): AIEnhanceResponse['data'] {
 // ── Route Handler ──────────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest): Promise<NextResponse<AIEnhanceResponse>> {
+  let body: AIEnhanceRequest = { mode: 'generate_description' };
   try {
-    const body: AIEnhanceRequest = await req.json();
+    body = await req.json();
     const { mode, title, description, category, condition, price } = body;
 
     if (!mode) {
@@ -209,7 +210,6 @@ Return JSON: { "score": number, "scoreBreakdown": [{ "label": "...", "score": nu
   } catch (err) {
     console.error('[AI Enhance Listing Error]', err);
     // Graceful degradation: fall back to mock on error
-    const body: AIEnhanceRequest = await req.json().catch(() => ({ mode: 'generate_description' }));
     return NextResponse.json({ success: true, data: getMockResponse(body) });
   }
 }

@@ -4,124 +4,160 @@ import React from 'react';
 import { useRiversStore } from '@/lib/store/useRiversStore';
 import { MOCK_CATEGORIES } from '@/lib/mock-data';
 import {
+  Car,
+  Building2,
+  Smartphone,
+  Sofa,
+  Briefcase,
+  Shirt,
   Cpu,
   Zap,
-  Headphones,
-  Monitor,
-  Building,
   Sparkles,
-  Layers,
   ChevronRight,
-  ChevronLeft,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { clsx } from 'clsx';
 
-const iconMap: Record<string, React.ReactNode> = {
-  Cpu: <Cpu className="w-5 h-5" />,
-  Zap: <Zap className="w-5 h-5" />,
-  Headphones: <Headphones className="w-5 h-5" />,
-  Monitor: <Monitor className="w-5 h-5" />,
-  Building: <Building className="w-5 h-5" />,
-  Sparkles: <Sparkles className="w-5 h-5" />,
+const categoryIconMap: Record<string, React.ReactNode> = {
+  Car: <Car className="w-6 h-6 sm:w-7 sm:h-7" />,
+  Building2: <Building2 className="w-6 h-6 sm:w-7 sm:h-7" />,
+  Smartphone: <Smartphone className="w-6 h-6 sm:w-7 sm:h-7" />,
+  Sofa: <Sofa className="w-6 h-6 sm:w-7 sm:h-7" />,
+  Briefcase: <Briefcase className="w-6 h-6 sm:w-7 sm:h-7" />,
+  Shirt: <Shirt className="w-6 h-6 sm:w-7 sm:h-7" />,
+  Cpu: <Cpu className="w-6 h-6 sm:w-7 sm:h-7" />,
+  Zap: <Zap className="w-6 h-6 sm:w-7 sm:h-7" />,
 };
 
 export const CategoryStream: React.FC = () => {
-  const { selectedCategory, setSelectedCategory, t, language } = useRiversStore();
+  const {
+    selectedCategory,
+    setSelectedCategory,
+    selectedSubcategory,
+    setSelectedSubcategory,
+    language,
+    t,
+  } = useRiversStore();
+
+  const activeCategoryObj = MOCK_CATEGORIES.find((c) => c.id === selectedCategory);
 
   return (
-    <section className="mx-auto max-w-7xl px-4 sm:px-6 mb-8">
+    <section id="categories-section" className="mx-auto max-w-7xl px-4 sm:px-6 mb-8">
+      {/* Header Title */}
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <Layers className="w-4 h-4 text-cyan-400" />
-          <h2 className="text-xs font-mono tracking-widest text-slate-400 uppercase">
+        <div>
+          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-100 tracking-tight flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-cyan-400 fill-cyan-400" />
             {t('intelligentCategoryStreams')}
           </h2>
+          <p className="text-xs text-slate-400 mt-0.5">
+            Select a category to explore verified ads, cars, properties, and electronics
+          </p>
         </div>
+
         <button
-          onClick={() => setSelectedCategory('all')}
-          className="text-xs font-mono text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1 cursor-pointer"
+          onClick={() => {
+            setSelectedCategory('all');
+            setSelectedSubcategory('all');
+          }}
+          className={`text-xs font-semibold px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
+            selectedCategory === 'all'
+              ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
+              : 'text-slate-400 hover:text-slate-200 bg-slate-900 border border-slate-800'
+          }`}
         >
-          {t('viewAllStreams')}{' '}
-          {language === 'ar' ? (
-            <ChevronLeft className="w-3.5 h-3.5" />
-          ) : (
-            <ChevronRight className="w-3.5 h-3.5" />
-          )}
+          {t('allStreams')}
         </button>
       </div>
 
-      {/* Horizontal Stream Cards Container */}
-      <div className="flex items-center gap-3.5 overflow-x-auto pb-4 pt-1 no-scrollbar scroll-smooth">
-        {/* All Streams Card */}
-        <motion.button
-          whileHover={{ y: -3, scale: 1.02 }}
-          onClick={() => setSelectedCategory('all')}
-          className={clsx(
-            'flex-shrink-0 flex items-center gap-3.5 px-5 py-3.5 rounded-2xl border transition-all duration-300 cursor-pointer text-left rtl:text-right',
-            selectedCategory === 'all'
-              ? 'bg-gradient-to-r from-cyan-500/20 to-blue-600/20 border-cyan-400 text-cyan-300 shadow-[0_0_20px_rgba(6,182,212,0.25)] ring-1 ring-cyan-500/30'
-              : 'bg-slate-950/60 backdrop-blur-xl border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-900/60'
-          )}
-        >
-          <div
-            className={clsx(
-              'p-2.5 rounded-xl transition-colors',
-              selectedCategory === 'all'
-                ? 'bg-cyan-500/20 text-cyan-400'
-                : 'bg-slate-900 text-slate-400'
-            )}
-          >
-            <Layers className="w-5 h-5" />
-          </div>
-          <div>
-            <span className="block text-sm font-bold tracking-tight">{t('allStreams')}</span>
-            <span className="text-[11px] font-mono text-slate-500">{t('liveP2pCatalog')}</span>
-          </div>
-        </motion.button>
-
-        {/* Dynamic Category Cards */}
-        {MOCK_CATEGORIES.map((cat) => {
-          const isSelected = selectedCategory === cat.id;
-          const translatedName = t(cat.id as any) !== cat.id ? t(cat.id as any) : cat.name;
-          const translatedDesc =
-            t(`${cat.id}_desc` as any) !== `${cat.id}_desc` ? t(`${cat.id}_desc` as any) : cat.description;
+      {/* Main Categories Grid */}
+      <div className="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-7 gap-2.5 sm:gap-3">
+        {MOCK_CATEGORIES.map((category) => {
+          const isSelected = selectedCategory === category.id;
+          const name = language === 'ar' && category.nameAr ? category.nameAr : category.name;
+          const iconNode = categoryIconMap[category.icon] || <Zap className="w-6 h-6" />;
 
           return (
             <motion.button
-              key={cat.id}
-              whileHover={{ y: -3, scale: 1.02 }}
-              onClick={() => setSelectedCategory(cat.id)}
-              className={clsx(
-                'flex-shrink-0 flex items-center gap-3.5 px-5 py-3.5 rounded-2xl border transition-all duration-300 cursor-pointer text-left rtl:text-right max-w-xs',
+              key={category.id}
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => {
+                if (isSelected) {
+                  setSelectedCategory('all');
+                  setSelectedSubcategory('all');
+                } else {
+                  setSelectedCategory(category.id);
+                  setSelectedSubcategory('all');
+                }
+              }}
+              className={`relative flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl border transition-all duration-300 text-center cursor-pointer ${
                 isSelected
-                  ? 'bg-gradient-to-r from-cyan-500/20 to-blue-600/20 border-cyan-400 text-cyan-300 shadow-[0_0_20px_rgba(6,182,212,0.25)] ring-1 ring-cyan-500/30'
-                  : 'bg-slate-950/60 backdrop-blur-xl border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-900/60'
-              )}
+                  ? 'bg-gradient-to-b from-blue-600/30 to-cyan-500/10 border-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.3)] ring-1 ring-cyan-400'
+                  : 'bg-slate-950/70 border-slate-800 hover:border-slate-700 hover:bg-slate-900/60'
+              }`}
             >
+              {/* Category Icon */}
               <div
-                className={clsx(
-                  'p-2.5 rounded-xl transition-colors shrink-0',
-                  isSelected ? 'bg-cyan-500/20 text-cyan-400' : 'bg-slate-900 text-slate-400'
-                )}
+                className={`flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl mb-2 transition-all ${
+                  isSelected
+                    ? 'bg-gradient-to-br from-cyan-400 to-blue-600 text-slate-950 shadow-md'
+                    : 'bg-slate-900 border border-slate-800 text-cyan-400 group-hover:text-cyan-300'
+                }`}
               >
-                {iconMap[cat.icon] || <Cpu className="w-5 h-5" />}
+                {iconNode}
               </div>
-              <div className="truncate flex-1">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-sm font-bold tracking-tight truncate">{translatedName}</span>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-900 text-cyan-400 border border-slate-800 shrink-0">
-                    {cat.itemCount}
-                  </span>
-                </div>
-                <span className="text-[11px] text-slate-400 truncate block mt-0.5">
-                  {translatedDesc}
-                </span>
-              </div>
+
+              {/* Title */}
+              <span
+                className={`text-[11px] sm:text-xs font-bold line-clamp-1 leading-snug ${
+                  isSelected ? 'text-cyan-300' : 'text-slate-200'
+                }`}
+              >
+                {name}
+              </span>
+
+              {/* Item Count */}
+              <span className="text-[9px] font-mono text-slate-500 mt-0.5">
+                {category.itemCount} ads
+              </span>
             </motion.button>
           );
         })}
       </div>
+
+      {/* Subcategory Filter Pills */}
+      {activeCategoryObj && activeCategoryObj.subcategories && (
+        <motion.div
+          initial={{ opacity: 0, y: 5 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-wrap items-center gap-2 mt-4 p-3 rounded-2xl bg-slate-950/80 border border-cyan-500/20 backdrop-blur-xl"
+        >
+          <span className="text-xs text-cyan-400 font-bold font-mono px-2">Subcategories:</span>
+          <button
+            onClick={() => setSelectedSubcategory('all')}
+            className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+              selectedSubcategory === 'all'
+                ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
+                : 'text-slate-400 hover:text-slate-200 bg-slate-900'
+            }`}
+          >
+            All {language === 'ar' && activeCategoryObj.nameAr ? activeCategoryObj.nameAr : activeCategoryObj.name}
+          </button>
+          {activeCategoryObj.subcategories.map((sub) => (
+            <button
+              key={sub.id}
+              onClick={() => setSelectedSubcategory(sub.id)}
+              className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                selectedSubcategory === sub.id
+                  ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200 bg-slate-900 border border-slate-800'
+              }`}
+            >
+              {language === 'ar' ? sub.nameAr : sub.nameEn}
+            </button>
+          ))}
+        </motion.div>
+      )}
     </section>
   );
 };

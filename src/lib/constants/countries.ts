@@ -1,0 +1,60 @@
+import { CountryInfo, CountryCode } from '../types';
+
+export const COUNTRIES: Record<CountryCode, CountryInfo> = {
+  JO: {
+    code: 'JO',
+    nameEn: 'Jordan',
+    nameAr: 'الأردن',
+    flag: '🇯🇴',
+    currency: 'JOD',
+    cities: ['Amman', 'Irbid', 'Zarqa', 'Aqaba', 'Salt', 'Madaba', 'Jerash'],
+  },
+  SA: {
+    code: 'SA',
+    nameEn: 'Saudi Arabia',
+    nameAr: 'السعودية',
+    flag: '🇸🇦',
+    currency: 'SAR',
+    cities: ['Riyadh', 'Jeddah', 'Dammam', 'Mecca', 'Medina', 'Khobar', 'Tabuk'],
+  },
+  AE: {
+    code: 'AE',
+    nameEn: 'UAE',
+    nameAr: 'الإمارات',
+    flag: '🇦🇪',
+    currency: 'AED',
+    cities: ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ajman', 'Ras Al Khaimah', 'Al Ain'],
+  },
+  EG: {
+    code: 'EG',
+    nameEn: 'Egypt',
+    nameAr: 'مصر',
+    flag: '🇪🇬',
+    currency: 'EGP',
+    cities: ['Cairo', 'Alexandria', 'Giza', 'Sharm El Sheikh', 'Hurghada', 'Mansoura', 'Tanta'],
+  },
+  IQ: {
+    code: 'IQ',
+    nameEn: 'Iraq',
+    nameAr: 'العراق',
+    flag: '🇮🇶',
+    currency: 'IQD',
+    cities: ['Baghdad', 'Erbil', 'Basra', 'Sulaymaniyah', 'Mosul', 'Najaf', 'Karbala'],
+  },
+  KW: {
+    code: 'KW',
+    nameEn: 'Kuwait',
+    nameAr: 'الكويت',
+    flag: '🇰🇼',
+    currency: 'KWD',
+    cities: ['Kuwait City', 'Hawalli', 'Salmiya', 'Ahmadi', 'Farwaniya', 'Jahra'],
+  },
+  OM: {
+    code: 'OM',
+    nameEn: 'Oman',
+    nameAr: 'عُمان',
+    flag: '🇴🇲',
+    currency: 'OMR',
+    cities: ['Muscat', 'Salalah', 'Sohar', 'Nizwa', 'Sur', 'Seeb'],
+  },
+};
