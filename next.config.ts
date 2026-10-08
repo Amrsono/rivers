@@ -15,6 +15,10 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  experimental: {
+    // Limit static generation workers to 1 to prevent heap OOM on this machine
+    cpus: 1,
+  },
 };
 
 export default nextConfig;

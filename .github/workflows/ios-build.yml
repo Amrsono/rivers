@@ -1,0 +1,68 @@
+name: iOS Build Pipeline
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'src/**'
+      - 'ios/**'
+      - 'capacitor.config.*'
+      - 'package.json'
+      - '.github/workflows/ios-build.yml'
+
+jobs:
+  build-ios:
+    name: Build iOS App (.ipa / Xcode Archive)
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build Next.js Application
+        run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+          NODE_ENV: production
+
+      - name: Sync Capacitor iOS
+        run: npx cap sync ios
+
+      - name: Select Xcode version
+        run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+
+      - name: Build Xcode Archive & Unsigned IPA
+        run: |
+          cd ios/App
+          xcodebuild -workspace App.xcworkspace \
+                     -scheme App \
+                     -configuration Release \
+                     -sdk iphoneos \
+                     -derivedDataPath build \
+                     CODE_SIGN_IDENTITY="" \
+                     CODE_SIGNING_REQUIRED=NO \
+                     CODE_SIGNING_ALLOWED=NO \
+                     clean build
+
+          mkdir -p Payload
+          cp -r build/Build/Products/Release-iphoneos/App.app Payload/
+          zip -r Rivers-Unsigned.ipa Payload
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Rivers-iOS-Unsigned-IPA
+          path: ios/App/Rivers-Unsigned.ipa
+          retention-days: 14
