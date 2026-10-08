@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server';
+
+export const dynamic = 'force-static';
 import { bnplCalculateSchema } from '@/lib/schemas';
 import { BNPLBreakdown, InstallmentDetail } from '@/lib/types';
 

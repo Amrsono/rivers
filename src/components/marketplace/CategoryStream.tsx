@@ -70,7 +70,7 @@ export const CategoryStream: React.FC = () => {
       </div>
 
       {/* Main Categories Grid */}
-      <div className="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-7 gap-2.5 sm:gap-3">
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2 sm:gap-3">
         {MOCK_CATEGORIES.map((category) => {
           const isSelected = selectedCategory === category.id;
           const name = language === 'ar' && category.nameAr ? category.nameAr : category.name;
@@ -90,7 +90,7 @@ export const CategoryStream: React.FC = () => {
                   setSelectedSubcategory('all');
                 }
               }}
-              className={`relative flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl border transition-all duration-300 text-center cursor-pointer ${
+              className={`relative flex flex-col items-center justify-center p-2 sm:p-4 rounded-2xl border transition-all duration-300 text-center cursor-pointer ${
                 isSelected
                   ? 'bg-gradient-to-b from-blue-600/30 to-cyan-500/10 border-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.3)] ring-1 ring-cyan-400'
                   : 'bg-slate-950/70 border-slate-800 hover:border-slate-700 hover:bg-slate-900/60'

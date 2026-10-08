@@ -1,6 +1,12 @@
 import { NextResponse } from 'next/server';
 import { INITIAL_LISTINGS } from '@/lib/mock-data';
 
+export const dynamic = 'force-static';
+
+export function generateStaticParams() {
+  return INITIAL_LISTINGS.map((l) => ({ id: l.id }));
+}
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }

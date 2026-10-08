@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server';
+
+export const dynamic = 'force-static';
 import { INITIAL_LISTINGS } from '@/lib/mock-data';
 import { listingFormSchema } from '@/lib/schemas';
 

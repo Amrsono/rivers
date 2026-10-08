@@ -20,7 +20,9 @@ export const MobileBottomNav: React.FC = () => {
   if (activeView !== 'discovery') return null;
 
   return (
-    <nav className="sm:hidden fixed bottom-0 inset-x-0 z-50 bg-slate-950/95 border-t border-cyan-500/20 backdrop-blur-2xl px-2 py-1.5 shadow-[0_-10px_25px_rgba(0,0,0,0.8)]">
+    <nav
+      className="sm:hidden fixed bottom-0 inset-x-0 z-50 bg-slate-950/95 border-t border-cyan-500/20 backdrop-blur-2xl px-2 pt-1.5 shadow-[0_-10px_25px_rgba(0,0,0,0.8)] safe-bottom"
+    >
       <div className="flex items-center justify-around relative">
         {/* Home Tab */}
         <button

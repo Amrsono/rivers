@@ -9,6 +9,7 @@ import { AdminDashboardView } from '@/components/marketplace/AdminDashboardView'
 import { ListingDetailModal } from '@/components/marketplace/ListingDetailModal';
 import { ListingCreatorModal } from '@/components/marketplace/ListingCreatorModal';
 import { BNPLCheckoutModal } from '@/components/marketplace/BNPLCheckoutModal';
+import { MobileBottomNav } from '@/components/marketplace/MobileBottomNav';
 import { Button } from '@/components/ui/Button';
 import {
   Zap,
@@ -48,7 +49,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-100 max-w-5xl mx-auto leading-[1.15] mb-6"
+              className="text-3xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-slate-100 max-w-5xl mx-auto leading-[1.15] mb-4 sm:mb-6"
             >
               {t('heroHeadingMain')} <br className="hidden sm:block" />
               <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-teal-300 bg-clip-text text-transparent">
@@ -97,7 +98,7 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.4 }}
-              className="inline-grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8 p-4 px-8 rounded-2xl bg-slate-950/60 border border-slate-800/80 backdrop-blur-xl shadow-2xl font-mono text-xs text-slate-300"
+              className="inline-grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-8 p-4 px-4 sm:px-8 rounded-2xl bg-slate-950/60 border border-slate-800/80 backdrop-blur-xl shadow-2xl font-mono text-xs text-slate-300 w-full sm:w-auto"
             >
               <div className="text-center">
                 <span className="block text-lg font-bold text-cyan-400">{formatPrice(214790000, true)}+</span>
@@ -140,6 +141,9 @@ export default function Home() {
       <ListingDetailModal />
       <ListingCreatorModal />
       <BNPLCheckoutModal />
+
+      {/* Mobile Bottom Navigation */}
+      <MobileBottomNav />
 
       {/* FOOTER */}
       <footer className="border-t border-slate-900 bg-slate-950/90 py-12 px-4 sm:px-6">

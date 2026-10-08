@@ -137,6 +137,7 @@ export const translations = {
     addTagBtn: 'Add Tag',
     livePreviewHeader: 'Ad Live Preview',
     backBtn: 'Back',
+    cancelBtn: 'Cancel',
     continueStepBtn: 'Continue to Step {step}',
     publishLiveBtn: 'Publish Ad Live',
 
@@ -367,6 +368,7 @@ export const translations = {
     addTagBtn: 'إضافة وسم',
     livePreviewHeader: 'معاينة الإعلان قبل النشر',
     backBtn: 'السابق',
+    cancelBtn: 'إلغاء',
     continueStepBtn: 'المتابعة إلى الخطوة {step}',
     publishLiveBtn: 'نشر الإعلان فوراً',
 

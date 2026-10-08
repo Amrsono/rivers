@@ -83,9 +83,9 @@ export const Navbar: React.FC = () => {
   }, []);
 
   return (
-    <header className="sticky top-2 z-40 mx-auto max-w-7xl px-3 sm:px-6 mb-4">
+    <header className="sticky top-0 z-40 mx-auto max-w-7xl px-3 sm:px-6 mb-4 pt-2">
       {/* Top Country & Language Strip */}
-      <div className="flex items-center justify-between px-4 py-1.5 mb-2 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-300">
+      <div className="flex items-center justify-between px-3 sm:px-4 py-1.5 mb-2 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-300 gap-2 overflow-hidden">
         <div className="flex items-center gap-3">
           {/* Country Dropdown Picker */}
           <div ref={countryDropdownRef} className="relative">
@@ -197,7 +197,7 @@ export const Navbar: React.FC = () => {
       </div>
 
       {/* Main Navbar Card */}
-      <div className="relative flex items-center justify-between h-18 px-4 sm:px-6 rounded-2xl bg-slate-950/90 border border-cyan-500/20 backdrop-blur-2xl shadow-2xl shadow-cyan-950/30 transition-all duration-300">
+      <div className="relative flex items-center justify-between min-h-[4rem] px-4 sm:px-6 rounded-2xl bg-slate-950/90 border border-cyan-500/20 backdrop-blur-2xl shadow-2xl shadow-cyan-950/30 transition-all duration-300">
         {/* Brand Logo */}
         <div className="flex items-center gap-4 lg:gap-6">
           <button
@@ -348,6 +348,89 @@ export const Navbar: React.FC = () => {
             <span className="sm:hidden">+</span>
           </Button>
         </div>
+      </div>
+
+      {/* Mobile Search Bar — visible only on small screens */}
+      <div className="sm:hidden mt-2" ref={searchContainerRef}>
+        <div
+          className={`flex items-center w-full h-11 rounded-xl bg-slate-900/90 border transition-all duration-300 ${
+            isSearchFocused
+              ? 'border-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.25)] ring-1 ring-cyan-500/30'
+              : 'border-slate-800'
+          }`}
+        >
+          <Search className="w-4 h-4 text-cyan-400 shrink-0 mx-3" />
+          <input
+            type="search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onFocus={() => setIsSearchFocused(true)}
+            placeholder={t('searchPlaceholder')}
+            className="w-full bg-transparent text-sm text-slate-100 placeholder-slate-500 focus:outline-none"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="p-2 text-slate-400 hover:text-slate-200 mr-1"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+
+        {/* Mobile predictive search dropdown */}
+        <AnimatePresence>
+          {isSearchFocused && searchQuery.trim() !== '' && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              className="absolute inset-x-3 z-50 mt-1 p-3 rounded-2xl bg-slate-950/95 border border-cyan-500/30 shadow-2xl backdrop-blur-2xl max-h-72 overflow-y-auto"
+            >
+              <div className="text-[11px] font-mono uppercase tracking-wider text-cyan-400 px-3 py-1 font-semibold">
+                {t('matchesLabel')} ({matchingListings.length})
+              </div>
+              {matchingListings.length === 0 ? (
+                <div className="py-6 text-center text-xs text-slate-400">
+                  {t('noMatchingListings')} &quot;{searchQuery}&quot;
+                </div>
+              ) : (
+                <div className="mt-1 divide-y divide-slate-900">
+                  {matchingListings.map((item) => (
+                    <div
+                      key={item.id}
+                      onClick={() => {
+                        openListingDetail(item);
+                        setIsSearchFocused(false);
+                        setSearchQuery('');
+                      }}
+                      className="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-900/80 active:bg-slate-900 cursor-pointer transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={item.images[0]}
+                          alt={item.title}
+                          className="w-10 h-10 rounded-lg object-cover border border-slate-800 shrink-0"
+                        />
+                        <div className="min-w-0">
+                          <p className="text-xs font-semibold text-slate-200 line-clamp-1">
+                            {language === 'ar' && item.titleAr ? item.titleAr : item.title}
+                          </p>
+                          <span className="text-[10px] text-slate-400 font-mono">
+                            {item.categoryName}
+                          </span>
+                        </div>
+                      </div>
+                      <span className="text-xs font-mono font-bold text-cyan-400 shrink-0 ml-2">
+                        {formatPrice(item.price)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </header>
   );

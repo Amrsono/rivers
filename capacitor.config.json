@@ -1,0 +1,8 @@
+{
+  "appId": "io.rivers.app",
+  "appName": "Rivers",
+  "webDir": "out",
+  "server": {
+    "androidScheme": "https"
+  }
+}

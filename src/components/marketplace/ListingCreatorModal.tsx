@@ -920,7 +920,7 @@ export const ListingCreatorModal: React.FC = () => {
       )}
 
       {/* Navigation Buttons */}
-      <div className="mt-8 pt-4 border-t border-slate-900 flex items-center justify-between">
+      <div className="mt-8 pt-4 border-t border-slate-900 flex items-center justify-between gap-3">
         <Button
           onClick={() => {
             setAiResult(null);
@@ -933,6 +933,18 @@ export const ListingCreatorModal: React.FC = () => {
         >
           {t('backBtn')}
         </Button>
+
+        {/* Cancel — always visible, terminates the flow */}
+        <button
+          onClick={() => {
+            setAiResult(null);
+            closeListingCreator();
+          }}
+          className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold text-slate-400 hover:text-red-400 hover:bg-red-950/30 border border-transparent hover:border-red-500/30 transition-all duration-150 cursor-pointer"
+        >
+          <X className="w-4 h-4" />
+          {t('cancelBtn') || 'Cancel'}
+        </button>
 
         {currentStep < 4 ? (
           <Button

@@ -9,6 +9,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 
+export const dynamic = 'force-static';
+
 export type AIEnhanceMode =
   | 'generate_description'
   | 'suggest_price'

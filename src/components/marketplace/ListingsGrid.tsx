@@ -77,7 +77,7 @@ export const ListingsGrid: React.FC = () => {
   });
 
   return (
-    <section className="mx-auto max-w-7xl px-4 sm:px-6 pb-20">
+    <section className="mx-auto max-w-7xl px-3 sm:px-6 pb-28 sm:pb-20">
       {/* Grid Subheader & Filters Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-900">
         <div>
@@ -156,7 +156,7 @@ export const ListingsGrid: React.FC = () => {
         </div>
       ) : (
         /* Listings Cards Grid */
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
           <AnimatePresence>
             {filteredListings.map((item) => {
               const isSaved = savedListingIds.includes(item.id);
@@ -222,16 +222,16 @@ export const ListingsGrid: React.FC = () => {
                   </div>
 
                   {/* Card Body */}
-                  <div className="p-4 flex-1 flex flex-col justify-between">
+                  <div className="p-2.5 sm:p-4 flex-1 flex flex-col justify-between">
                     <div>
                       {/* Price Header */}
                       <div className="flex items-baseline justify-between mb-1.5">
-                        <span className="text-xl font-extrabold font-mono bg-gradient-to-r from-white via-slate-100 to-cyan-400 bg-clip-text text-transparent">
+                        <span className="text-base sm:text-xl font-extrabold font-mono bg-gradient-to-r from-white via-slate-100 to-cyan-400 bg-clip-text text-transparent">
                           {formatPrice(item.price)}
                         </span>
                         {item.flowFinanceEligible && (
-                          <span className="text-[10px] font-mono text-cyan-400 bg-cyan-950/50 px-2 py-0.5 rounded-md border border-cyan-500/30">
-                            0% APR BNPL
+                          <span className="hidden sm:inline text-[10px] font-mono text-cyan-400 bg-cyan-950/50 px-2 py-0.5 rounded-md border border-cyan-500/30">
+                            0% APR
                           </span>
                         )}
                       </div>
@@ -239,7 +239,7 @@ export const ListingsGrid: React.FC = () => {
                       {/* Title */}
                       <h4
                         onClick={() => openListingDetail(item)}
-                        className="text-sm font-bold text-slate-100 line-clamp-2 hover:text-cyan-300 transition-colors cursor-pointer mb-2"
+                        className="text-xs sm:text-sm font-bold text-slate-100 line-clamp-2 hover:text-cyan-300 transition-colors cursor-pointer mb-2"
                       >
                         {titleText}
                       </h4>
@@ -272,23 +272,23 @@ export const ListingsGrid: React.FC = () => {
                       </div>
 
                       {/* OpenSooq Contact Action Bar */}
-                      <div className="grid grid-cols-2 gap-2 pt-1">
+                      <div className="grid grid-cols-2 gap-1.5 sm:gap-2 pt-1">
                         {/* Call / Reveal Phone Button */}
                         <button
                           onClick={() => openPhoneRevealModal(item)}
-                          className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-slate-950 font-extrabold text-xs shadow-md transition-all cursor-pointer"
+                          className="flex items-center justify-center gap-1 sm:gap-1.5 py-2 px-1.5 sm:px-3 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-slate-950 font-extrabold text-[11px] sm:text-xs shadow-md transition-all cursor-pointer active:scale-95"
                         >
-                          <Phone className="w-3.5 h-3.5 fill-slate-950" />
-                          <span>{t('callSeller')}</span>
+                          <Phone className="w-3.5 h-3.5 fill-slate-950 shrink-0" />
+                          <span className="truncate">{t('callSeller')}</span>
                         </button>
 
                         {/* Direct Chat Button */}
                         <button
                           onClick={() => openListingDetail(item)}
-                          className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-200 font-bold text-xs transition-all cursor-pointer"
+                          className="flex items-center justify-center gap-1 sm:gap-1.5 py-2 px-1.5 sm:px-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-200 font-bold text-[11px] sm:text-xs transition-all cursor-pointer active:scale-95"
                         >
-                          <MessageSquare className="w-3.5 h-3.5 text-cyan-400" />
-                          <span>{t('chat')}</span>
+                          <MessageSquare className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                          <span className="truncate">{t('chat')}</span>
                         </button>
                       </div>
                     </div>
