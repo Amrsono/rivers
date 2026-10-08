@@ -52,7 +52,7 @@ export const Modal: React.FC<ModalProps> = ({
          * Scroll wrapper: fills the viewport and owns the scrollbar.
          * `overscroll-contain` prevents the body from scrolling behind it.
          */
-        <div className="fixed inset-0 z-50 overflow-y-auto overscroll-contain">
+        <div className="fixed inset-0 z-50 overflow-y-auto overscroll-contain" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
           {/* Backdrop — sits behind everything via `fixed` */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -67,14 +67,14 @@ export const Modal: React.FC<ModalProps> = ({
            * the scroll container so `items-center` centres the modal on large
            * screens, while still letting it grow and scroll freely on mobile.
            */}
-          <div className="flex min-h-full items-center justify-center p-4 sm:p-6">
+          <div className="flex min-h-full items-start sm:items-center justify-center px-3 py-4 sm:p-6">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
               transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
               className={clsx(
-                'relative z-10 w-full rounded-2xl bg-slate-950/90 border border-cyan-500/20 shadow-2xl shadow-cyan-950/40 backdrop-blur-2xl overflow-hidden my-8',
+                'relative z-10 w-full rounded-2xl bg-slate-950/90 border border-cyan-500/20 shadow-2xl shadow-cyan-950/40 backdrop-blur-2xl overflow-hidden my-4 sm:my-8',
                 maxWidthClasses[maxWidth]
               )}
             >

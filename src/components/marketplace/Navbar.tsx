@@ -83,7 +83,7 @@ export const Navbar: React.FC = () => {
   }, []);
 
   return (
-    <header className="sticky top-0 z-40 mx-auto max-w-7xl px-3 sm:px-6 mb-4 pt-2">
+    <header className="sticky top-0 z-40 mx-auto max-w-7xl px-3 sm:px-6 mb-4">
       {/* Top Country & Language Strip */}
       <div className="flex items-center justify-between px-3 sm:px-4 py-1.5 mb-2 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-300 gap-2 overflow-hidden">
         <div className="flex items-center gap-3">

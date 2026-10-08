@@ -1,4 +1,4 @@
-lets replicate the journey design and simplicity of the website opensooq.com while keeping the layout and technology used to build so far , i want the website to be as simple as opensooq.com 
-also lets build the app support as this website should be a webapp and mobile app for android/ios   
+lets replicate the journey design and simplicity of the website "opensooq.com" please open it and replicate it while keeping the layout and technology used to build so far , i want the website to be as simple as opensooq.com 
+also lets build the app build as this website should be a webapp and mobile app for android/ios   
 
 

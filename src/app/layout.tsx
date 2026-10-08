@@ -54,7 +54,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`dark ${geistSans.variable} ${geistMono.variable}`}>
-      <body className="antialiased min-h-screen bg-[#05070c] text-slate-100 relative selection:bg-cyan-500/30 selection:text-cyan-300 pb-16 sm:pb-0">
+      <body
+        className="antialiased min-h-screen bg-[#05070c] text-slate-100 relative selection:bg-cyan-500/30 selection:text-cyan-300 pb-16 sm:pb-0"
+        style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
+      >
         {/* Ambient Liquid Glows */}
         <div className="fixed top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none -z-10" />
         <div className="fixed bottom-1/3 right-1/4 w-[30rem] h-[30rem] bg-blue-600/10 rounded-full blur-[150px] pointer-events-none -z-10" />

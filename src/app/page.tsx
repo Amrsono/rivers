@@ -9,7 +9,6 @@ import { AdminDashboardView } from '@/components/marketplace/AdminDashboardView'
 import { ListingDetailModal } from '@/components/marketplace/ListingDetailModal';
 import { ListingCreatorModal } from '@/components/marketplace/ListingCreatorModal';
 import { BNPLCheckoutModal } from '@/components/marketplace/BNPLCheckoutModal';
-import { MobileBottomNav } from '@/components/marketplace/MobileBottomNav';
 import { Button } from '@/components/ui/Button';
 import {
   Zap,
@@ -141,9 +140,6 @@ export default function Home() {
       <ListingDetailModal />
       <ListingCreatorModal />
       <BNPLCheckoutModal />
-
-      {/* Mobile Bottom Navigation */}
-      <MobileBottomNav />
 
       {/* FOOTER */}
       <footer className="border-t border-slate-900 bg-slate-950/90 py-12 px-4 sm:px-6">
