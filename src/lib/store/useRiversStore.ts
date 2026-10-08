@@ -97,8 +97,8 @@ export const useRiversStore = create<RiversStoreState>((set, get) => ({
   },
   formatPrice: (amount, compact = false) => {
     const lang = get().language;
-    const countryCode = get().selectedCountry || 'JO';
-    const currency = COUNTRIES[countryCode]?.currency || 'JOD';
+    const countryCode = get().selectedCountry || 'EG';
+    const currency = COUNTRIES[countryCode]?.currency || 'EGP';
     const locale = lang === 'ar' ? 'ar-EG' : 'en-US';
 
     if (compact) {
@@ -135,7 +135,7 @@ export const useRiversStore = create<RiversStoreState>((set, get) => ({
     return text;
   },
 
-  selectedCountry: 'JO',
+  selectedCountry: 'EG',
   setSelectedCountry: (country) => set({ selectedCountry: country, selectedCity: 'all' }),
 
   selectedCity: 'all',
