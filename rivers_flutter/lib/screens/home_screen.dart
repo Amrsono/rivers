@@ -5,9 +5,17 @@ import '../providers/marketplace_provider.dart';
 import '../models/listing.dart';
 import 'listing_detail_screen.dart';
 import 'admin_screen.dart';
+import 'post_listing_dialog.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String _activeFilter = 'ALL'; // ALL, VERIFIED, BNPL
 
   @override
   Widget build(BuildContext context) {
@@ -15,266 +23,524 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.bgDark,
-      appBar: AppBar(
-        backgroundColor: AppColors.cardDark,
-        elevation: 0,
-        title: Row(
-          children: [
-            const Icon(Icons.waves, color: AppColors.primaryLight, size: 28),
-            const SizedBox(width: 8),
-            const Text(
-              "RIVERS",
-              style: TextStyle(
-                fontWeight: FontWeight.w900,
-                letterSpacing: 1.5,
-                color: AppColors.textLight,
-              ),
-            ),
-            const Spacer(),
-            // MENA Country Selector
-            PopupMenuButton<CountryInfo>(
-              initialValue: provider.selectedCountry,
-              onSelected: (country) => provider.setCountry(country),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.white10,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            // Top App Bar & Header
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                child: Column(
                   children: [
-                    Text(provider.selectedCountry.flag, style: const TextStyle(fontSize: 16)),
-                    const SizedBox(width: 4),
-                    Text(
-                      provider.selectedCountry.code,
-                      style: const TextStyle(color: AppColors.textLight, fontWeight: FontWeight.bold, fontSize: 12),
+                    // Top Strip: Location & Language
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        PopupMenuButton<CountryInfo>(
+                          initialValue: provider.selectedCountry,
+                          onSelected: (country) => provider.setCountry(country),
+                          itemBuilder: (context) => AppConstants.countries
+                              .map((c) => PopupMenuItem(
+                                    value: c,
+                                    child: Text("${c.flag} ${c.nameEn} (${c.currency})"),
+                                  ))
+                              .toList(),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: AppColors.cardDark,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: AppColors.cardBorder),
+                            ),
+                            child: Row(
+                              children: [
+                                Text(provider.selectedCountry.flag, style: const TextStyle(fontSize: 14)),
+                                const SizedBox(width: 4),
+                                Text(
+                                  provider.selectedCountry.nameEn,
+                                  style: const TextStyle(color: AppColors.textLight, fontSize: 12, fontWeight: FontWeight.bold),
+                                ),
+                                const Icon(Icons.arrow_drop_down, color: AppColors.textMuted, size: 16),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: AppColors.cardDark,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: AppColors.cardBorder),
+                              ),
+                              child: const Row(
+                                children: [
+                                  Icon(Icons.favorite, color: AppColors.pinkFavorite, size: 12),
+                                  SizedBox(width: 4),
+                                  Text("Saved Ads", style: TextStyle(color: AppColors.textLight, fontSize: 11)),
+                                  SizedBox(width: 4),
+                                  CircleAvatar(
+                                    radius: 8,
+                                    backgroundColor: AppColors.primaryBlue,
+                                    child: Text("2", style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            const Text("EN | عربي", style: TextStyle(color: AppColors.textMuted, fontSize: 11, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ],
                     ),
-                    const Icon(Icons.arrow_drop_down, color: AppColors.textMuted, size: 18),
+
+                    const SizedBox(height: 12),
+
+                    // Main Header Row with Logo, Analytics & Post Button
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryBlue.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: AppColors.primaryBlue),
+                          ),
+                          child: const Icon(Icons.bolt, color: AppColors.neonCyanLight, size: 20),
+                        ),
+                        const SizedBox(width: 8),
+                        const Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "RIVERS",
+                              style: TextStyle(
+                                color: AppColors.textLight,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 1.2,
+                              ),
+                            ),
+                            Text(
+                              "FLUID P2P MARKETPLACE & ESCROW",
+                              style: TextStyle(color: AppColors.neonCyan, fontSize: 8, fontWeight: FontWeight.bold, letterSpacing: 0.8),
+                            ),
+                          ],
+                        ),
+                        const Spacer(),
+                        ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primaryBlue,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          ),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (_) => const PostListingDialog(),
+                            );
+                          },
+                          icon: const Icon(Icons.add_circle_outline, size: 16),
+                          label: const Text("+ Post Free Ad", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // Search Bar
+                    TextField(
+                      onChanged: (val) => provider.setSearchQuery(val),
+                      style: const TextStyle(color: AppColors.textLight, fontSize: 13),
+                      decoration: InputDecoration(
+                        hintText: "Search cars, real estate, mobiles, electronics...",
+                        hintStyle: const TextStyle(color: AppColors.textMuted, fontSize: 13),
+                        prefixIcon: const Icon(Icons.search, color: AppColors.neonCyan, size: 18),
+                        filled: true,
+                        fillColor: AppColors.cardDark,
+                        contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(color: AppColors.cardBorder),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(color: AppColors.cardBorder),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
-              itemBuilder: (context) => AppConstants.countries
-                  .map((c) => PopupMenuItem(
-                        value: c,
-                        child: Text("${c.flag} ${c.nameEn} (${c.currency})"),
-                      ))
-                  .toList(),
             ),
+
+            // Explore Category Streams Section Header
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: Row(
+                  children: [
+                    Icon(Icons.auto_awesome, color: AppColors.neonCyan, size: 18),
+                    SizedBox(width: 8),
+                    Text(
+                      "Explore Category Streams",
+                      style: TextStyle(color: AppColors.textLight, fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // Category Horizontal Scrollable Bar
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: 90,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  children: [
+                    _buildCategoryCard(context, "cat_cars", "Cars & Vehicles", "1240 ads", Icons.directions_car),
+                    _buildCategoryCard(context, "cat_realestate", "Real Estate", "890 ads", Icons.apartment),
+                    _buildCategoryCard(context, "cat_mobiles", "Mobiles & Electronics", "2150 ads", Icons.smartphone),
+                    _buildCategoryCard(context, "cat_home", "Home & Furniture", "670 ads", Icons.chair),
+                    _buildCategoryCard(context, "cat_jobs", "Jobs & Services", "430 ads", Icons.work),
+                    _buildCategoryCard(context, "cat_fashion", "Fashion & Beauty", "510 ads", Icons.watch),
+                  ],
+                ),
+              ),
+            ),
+
+            // Live Listings Feed Header & Filters
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 20, 16, 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        const Text(
+                          "Live Listings Feed",
+                          style: TextStyle(color: AppColors.textLight, fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: AppColors.neonCyan.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: AppColors.neonCyan.withValues(alpha: 0.5)),
+                          ),
+                          child: Text(
+                            "${provider.listings.length}",
+                            style: const TextStyle(color: AppColors.neonCyan, fontSize: 11, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    // Filter Pills
+                    Row(
+                      children: [
+                        _buildFilterPill("All", 'ALL'),
+                        const SizedBox(width: 4),
+                        _buildFilterPill("Verified", 'VERIFIED'),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // Grid of Listing Cards
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              sliver: SliverGrid(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.68,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                ),
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final item = provider.listings[index];
+                    return _buildWebStyleCard(context, item);
+                  },
+                  childCount: provider.listings.length,
+                ),
+              ),
+            ),
+
+            const SliverToBoxAdapter(child: SizedBox(height: 80)),
           ],
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.admin_panel_settings, color: AppColors.primaryLight),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const AdminScreen()),
-              );
-            },
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Search & Category Bar
-          Container(
-            color: AppColors.cardDark,
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-            child: Column(
-              children: [
-                TextField(
-                  onChanged: (val) => provider.setSearchQuery(val),
-                  style: const TextStyle(color: AppColors.textLight),
-                  decoration: InputDecoration(
-                    hintText: "Search cars, electronics, real estate...",
-                    hintStyle: const TextStyle(color: AppColors.textMuted),
-                    prefixIcon: const Icon(Icons.search, color: AppColors.textMuted),
-                    filled: true,
-                    fillColor: AppColors.bgDark,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                // Category Pills
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      _buildCategoryChip(context, "ALL", "All Items"),
-                      _buildCategoryChip(context, "cat_cars", "Cars"),
-                      _buildCategoryChip(context, "cat_mobiles", "Electronics"),
-                      _buildCategoryChip(context, "cat_realestate", "Real Estate"),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // Escrow Guarantee Banner
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            color: AppColors.primary.withOpacity(0.2),
-            child: const Row(
-              children: [
-                Icon(Icons.shield_outlined, color: AppColors.primaryLight, size: 18),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    "All purchases backed by Rivers Escrow Guarantee & 0% BNPL.",
-                    style: TextStyle(color: AppColors.primaryLight, fontSize: 12, fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // Listing Grid
-          Expanded(
-            child: provider.isLoading
-                ? const Center(child: CircularProgressIndicator(color: AppColors.primaryLight))
-                : provider.listings.isEmpty
-                    ? const Center(
-                        child: Text("No listings found matching your search.",
-                            style: TextStyle(color: AppColors.textMuted)),
-                      )
-                    : GridView.builder(
-                        padding: const EdgeInsets.all(16),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.72,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
-                        ),
-                        itemCount: provider.listings.length,
-                        itemBuilder: (context, index) {
-                          final item = provider.listings[index];
-                          return _buildListingCard(context, item);
-                        },
-                      ),
-          ),
-        ],
       ),
     );
   }
 
-  Widget _buildCategoryChip(BuildContext context, String id, String label) {
+  Widget _buildCategoryCard(BuildContext context, String id, String title, String subtitle, IconData icon) {
     final provider = Provider.of<MarketplaceProvider>(context);
     final isSelected = provider.selectedCategory == id;
 
-    return Padding(
-      padding: const EdgeInsets.only(right: 8.0),
-      child: ChoiceChip(
-        label: Text(label),
-        selected: isSelected,
-        selectedColor: AppColors.primaryLight,
-        backgroundColor: AppColors.bgDark,
-        labelStyle: TextStyle(
-          color: isSelected ? Colors.white : AppColors.textMuted,
-          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+    return GestureDetector(
+      onTap: () => provider.setCategory(isSelected ? 'ALL' : id),
+      child: Container(
+        width: 130,
+        margin: const EdgeInsets.only(right: 10),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primaryBlue.withValues(alpha: 0.3) : AppColors.cardDark,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: isSelected ? AppColors.neonCyan : AppColors.cardBorder),
         ),
-        onSelected: (_) => provider.setCategory(id),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: isSelected ? AppColors.neonCyan : AppColors.neonCyanLight, size: 24),
+            const SizedBox(height: 6),
+            Text(
+              title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(color: AppColors.textLight, fontSize: 11, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 2),
+            Text(subtitle, style: const TextStyle(color: AppColors.textMuted, fontSize: 9)),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildListingCard(BuildContext context, Listing item) {
+  Widget _buildFilterPill(String label, String value) {
+    final isSelected = _activeFilter == value;
+    return GestureDetector(
+      onTap: () => setState(() => _activeFilter = value),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primaryBlue : AppColors.cardDark,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: isSelected ? AppColors.primaryBlue : AppColors.cardBorder),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected ? Colors.white : AppColors.textMuted,
+            fontSize: 10,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWebStyleCard(BuildContext context, Listing item) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (_) => ListingDetailScreen(listing: item),
-          ),
+          MaterialPageRoute(builder: (_) => ListingDetailScreen(listing: item)),
         );
       },
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.cardDark,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white.withOpacity(0.05)),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppColors.cardBorder),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image with Badges
+            // Image Stack with Badges
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
                   child: AspectRatio(
-                    aspectRatio: 1.3,
+                    aspectRatio: 1.25,
                     child: Image.network(
                       item.images.isNotEmpty ? item.images.first : 'https://via.placeholder.com/400',
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
-                if (item.safetyBadge)
-                  Positioned(
-                    top: 8,
-                    left: 8,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: const Row(
-                        children: [
-                          Icon(Icons.shield, color: Colors.white, size: 12),
-                          SizedBox(width: 2),
-                          Text("Escrow", style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
-                        ],
-                      ),
+
+                // Top Left Badges: FEATURED + VERIFIED
+                Positioned(
+                  top: 8,
+                  left: 8,
+                  child: Row(
+                    children: [
+                      if (item.featured ?? true)
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          margin: const EdgeInsets.only(right: 4),
+                          decoration: BoxDecoration(
+                            color: AppColors.amberFeatured,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Text("FEATURED", style: TextStyle(color: Colors.black, fontSize: 8, fontWeight: FontWeight.bold)),
+                        ),
+                      if (item.safetyBadge)
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: AppColors.emeraldVerified,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Row(
+                            children: [
+                              Icon(Icons.shield, color: Colors.white, size: 9),
+                              SizedBox(width: 2),
+                              Text("VERIFIED", style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+
+                // Top Right: Photo Count Badge
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.7),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.camera_alt, color: Colors.white, size: 10),
+                        const SizedBox(width: 3),
+                        Text("${item.images.length}", style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+                      ],
                     ),
                   ),
+                ),
+
+                // Bottom Right: Heart Favorite Button
+                Positioned(
+                  bottom: 8,
+                  right: 8,
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: AppColors.pinkFavorite.withValues(alpha: 0.9),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.favorite, color: Colors.white, size: 14),
+                  ),
+                ),
               ],
             ),
 
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "${item.currency} ${item.price.toStringAsFixed(0)}",
-                    style: const TextStyle(
-                      color: AppColors.primaryLight,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    item.title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: AppColors.textLight,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      const Icon(Icons.location_on, color: AppColors.textMuted, size: 12),
-                      const SizedBox(width: 2),
-                      Expanded(
-                        child: Text(
-                          item.location,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(color: AppColors.textMuted, fontSize: 11),
+            // Card Body
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Price & 0% APR Pill
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "${item.currency} ${item.price.toStringAsFixed(0)}",
+                              style: const TextStyle(
+                                color: AppColors.neonCyanLight,
+                                fontWeight: FontWeight.w900,
+                                fontSize: 15,
+                              ),
+                            ),
+                            if (item.flowFinanceEligible)
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                                decoration: BoxDecoration(
+                                  color: AppColors.neonCyan.withValues(alpha: 0.15),
+                                  border: Border.all(color: AppColors.neonCyan.withValues(alpha: 0.4)),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: const Text("0% APR", style: TextStyle(color: AppColors.neonCyan, fontSize: 8, fontWeight: FontWeight.bold)),
+                              ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+
+                        const SizedBox(height: 4),
+
+                        // Title
+                        Text(
+                          item.title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: AppColors.textLight,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            height: 1.2,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    // Specs & Location Footer
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Spec Tag Pills
+                        if (item.specs != null && item.specs!.isNotEmpty)
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: item.specs!.entries
+                                  .take(3)
+                                  .map((e) => Container(
+                                        margin: const EdgeInsets.only(right: 4),
+                                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.pillBg,
+                                          borderRadius: BorderRadius.circular(4),
+                                        ),
+                                        child: Text(
+                                          e.value,
+                                          style: const TextStyle(color: AppColors.textMuted, fontSize: 9),
+                                        ),
+                                      ))
+                                  .toList(),
+                            ),
+                          ),
+
+                        const SizedBox(height: 6),
+
+                        // Location & Time Footer
+                        Row(
+                          children: [
+                            const Icon(Icons.location_on, color: AppColors.neonCyan, size: 10),
+                            const SizedBox(width: 2),
+                            Expanded(
+                              child: Text(
+                                "${item.location} • Just now",
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(color: AppColors.textMuted, fontSize: 9),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
